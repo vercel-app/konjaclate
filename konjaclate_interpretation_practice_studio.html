@@ -1,0 +1,2706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KONJACLATE — Interpretation Practice Studio</title>
+
+  <!-- Google Fonts: Nunito (Display/Headings), Plus Jakarta Sans & Be Vietnam Pro (Body & Vietnamese Translations) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&family=Nunito:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Plus Jakarta Sans', 'Be Vietnam Pro', 'system-ui', 'sans-serif'],
+            display: ['Nunito', 'Plus Jakarta Sans', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            mintbg: '#F6FDF2',
+            leaf: '#58CC02',
+            leafDark: '#46A302',
+            leafHover: '#61E002',
+            duoTint: '#D7FFB8',
+            duoSoft: '#EEFFDB',
+            duoOrange: '#FF9600',
+            practice: '#2B75FF',
+            challenge: '#FF2B2B',
+          },
+          boxShadow: {
+            card: '0 6px 20px -4px rgba(88, 204, 2, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.04)',
+            cardHover: '0 16px 32px -6px rgba(88, 204, 2, 0.18), 0 4px 12px -2px rgba(15, 23, 42, 0.06)',
+            glowBlue: '0 8px 22px -4px rgba(43, 117, 255, 0.35)',
+            glowRed: '0 8px 22px -4px rgba(255, 43, 43, 0.35)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --accent: #2B75FF;
+    }
+
+    body {
+      background-color: #F6FDF2;
+      background-image: radial-gradient(#DDF2D0 1.35px, transparent 1.35px);
+      background-size: 24px 24px;
+      color: #132A1C;
+      font-family: 'Plus Jakarta Sans', 'Be Vietnam Pro', sans-serif;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .font-display {
+      font-family: 'Nunito', 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* Duolingo 3D Tactile Buttons */
+    .btn-3d-green {
+      background-color: #58CC02;
+      color: #FFFFFF;
+      border-bottom: 4px solid #46A302;
+      transition: transform 0.12s ease, background-color 0.15s ease, border-bottom-width 0.12s ease;
+    }
+    .btn-3d-green:hover { background-color: #61E002; }
+    .btn-3d-green:active { transform: translateY(2px); border-bottom-width: 2px; border-bottom-color: #58A700; }
+
+    .btn-3d-blue {
+      background-color: #2B75FF;
+      color: #FFFFFF;
+      border-bottom: 4px solid #1D4ED8;
+      transition: transform 0.12s ease, filter 0.15s ease, border-bottom-width 0.12s ease;
+    }
+    .btn-3d-blue:hover { filter: brightness(1.05); }
+    .btn-3d-blue:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+    .btn-3d-red {
+      background-color: #FF2B2B;
+      color: #FFFFFF;
+      border-bottom: 4px solid #B91C1C;
+      transition: transform 0.12s ease, filter 0.15s ease, border-bottom-width 0.12s ease;
+    }
+    .btn-3d-red:hover { filter: brightness(1.05); }
+    .btn-3d-red:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+    .btn-3d-white {
+      background-color: #FFFFFF;
+      color: #1E293B;
+      border: 2px solid #E5E7EB;
+      border-bottom: 4px solid #D1D5DB;
+      transition: transform 0.12s ease, background-color 0.15s ease, border-color 0.15s ease;
+    }
+    .btn-3d-white:hover { background-color: #F6FDF2; border-color: #D7FFB8; border-bottom-color: #58CC02; }
+    .btn-3d-white:active { transform: translateY(2px); border-bottom-width: 2px; }
+
+    /* Tactile 3D Cards */
+    .duo-card {
+      border: 2px solid #E5E7EB;
+      border-bottom: 4px solid #D1D5DB;
+      transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+    }
+    .duo-card:hover {
+      border-color: #58CC02;
+      border-bottom-color: #46A302;
+    }
+    .duo-card.challenge-card:hover {
+      border-color: #FF2B2B;
+      border-bottom-color: #B91C1C;
+    }
+
+    /* Mode Switcher Gradient Animation */
+    .mode-track {
+      background: linear-gradient(135deg, #2B75FF 0%, #5CA8FF 45%, #FF525A 55%, #FF2B2B 100%);
+      background-size: 240% 240%;
+      background-position: 0% 50%;
+      transition: background-position 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
+    }
+    .mode-track.is-challenge { background-position: 100% 50%; }
+    .mode-knob { transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .mode-track.is-challenge .mode-knob { transform: translateX(36px); }
+
+    /* Hero Banner */
+    .hero-green {
+      background: linear-gradient(135deg, #58CC02 0%, #46A302 100%);
+      transition: background 0.5s ease;
+    }
+    .hero-green.is-challenge {
+      background: linear-gradient(135deg, #DC2626 0%, #EF4444 55%, #B91C1C 100%);
+    }
+
+    /* Mascot Float */
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+    .mascot-float { animation: floatSlow 3.2s ease-in-out infinite; }
+
+    /* Flame Flicker */
+    @keyframes flameFlicker {
+      0%, 100% { transform: scale(1) rotate(-2deg); filter: drop-shadow(0 0 6px rgba(255, 150, 0, 0.55)); }
+      50% { transform: scale(1.14) rotate(3deg); filter: drop-shadow(0 0 12px rgba(255, 90, 0, 0.85)); }
+    }
+    .flame-anim { display: inline-block; animation: flameFlicker 1.5s ease-in-out infinite; }
+
+    /* Audio Waveform */
+    @keyframes waveBounce {
+      0%, 100% { height: 18%; }
+      50% { height: 92%; }
+    }
+    .wave-bar { height: 22%; transition: height 0.2s ease; }
+    .wave-active .wave-bar { animation: waveBounce 0.85s ease-in-out infinite; }
+    .wave-active .wave-bar:nth-child(2n) { animation-duration: 0.65s; animation-delay: 0.1s; }
+    .wave-active .wave-bar:nth-child(3n) { animation-duration: 1.05s; animation-delay: 0.22s; }
+    .wave-active .wave-bar:nth-child(5n) { animation-duration: 0.75s; animation-delay: 0.35s; }
+
+    /* Recording Pulse */
+    @keyframes recPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 43, 43, 0.55); }
+      70% { box-shadow: 0 0 0 18px rgba(255, 43, 43, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 43, 43, 0); }
+    }
+    .rec-pulse { animation: recPulse 1.4s infinite; }
+
+    /* Confetti */
+    @keyframes confettiFall {
+      0% { transform: translateY(-16px) rotate(0deg); opacity: 1; }
+      100% { transform: translateY(150px) rotate(540deg); opacity: 0; }
+    }
+    .confetti-piece {
+      position: absolute;
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      animation: confettiFall 2.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+
+    /* Smooth View Entrance */
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-view { animation: fadeSlideUp 0.28s ease-out forwards; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #EEFFDB; }
+    ::-webkit-scrollbar-thumb { background: #89E219; border-radius: 99px; }
+    ::-webkit-scrollbar-thumb:hover { background: #58CC02; }
+  </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-[#D7FFB8] selection:text-[#2D6A00]">
+
+  <!-- ==================== SPLASH / LOADING SCREEN ==================== -->
+  <div id="splash-screen" class="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#F6FDF2] px-6 transition-opacity duration-500" style="background-image: radial-gradient(#DDF2D0 1.35px, transparent 1.35px); background-size: 24px 24px;">
+    <div class="relative flex flex-col items-center max-w-lg text-center bg-white/95 backdrop-blur-md p-8 sm:p-10 rounded-[32px] border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card">
+      <div id="splash-mascot" class="mascot-float mb-4"></div>
+
+      <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#EEFFDB] border border-[#D7FFB8] text-[#46A302] text-xs font-extrabold tracking-wider uppercase mb-2">
+        Interpretation Practice Studio
+      </div>
+      <h1 class="font-display text-4xl sm:text-5xl font-black tracking-tight text-slate-900 mb-3">
+        KONJAC<span class="text-[#58CC02]">LATE</span>
+      </h1>
+
+      <p id="splash-slogan" class="text-slate-600 text-sm sm:text-base font-medium leading-relaxed mb-7 min-h-[3rem]"></p>
+
+      <div class="w-full max-w-xs">
+        <div class="flex justify-between text-xs font-bold text-[#46A302] mb-2">
+          <span>Preparing interpreting studio...</span>
+          <span id="splash-percent">0%</span>
+        </div>
+        <div class="w-full h-3.5 bg-[#EEFFDB] rounded-full overflow-hidden p-0.5 border border-[#D7FFB8]">
+          <div id="splash-bar" class="h-full rounded-full bg-gradient-to-r from-[#58CC02] to-[#89E219] transition-all duration-100" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <button onclick="dismissSplash()" class="mt-6 btn-3d-white px-5 py-2 rounded-2xl text-sm font-bold inline-flex items-center gap-1.5">
+        Enter Studio
+        <svg class="w-4 h-4 text-[#58CC02]" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ==================== STICKY TOP NAVBAR ==================== -->
+  <header id="top-navbar" class="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b-2 border-[#E5E7EB]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+      <!-- Brand -->
+      <button onclick="navigate('home')" class="flex items-center gap-2.5 group focus:outline-none">
+        <div class="w-10 h-10 rounded-2xl bg-[#58CC02] flex items-center justify-center text-white shadow-sm border-b-[3px] border-[#46A302]">
+          <svg class="w-6 h-6" viewBox="0 0 36 36" fill="none">
+            <circle cx="18" cy="21" r="10" fill="#FFFFFF"/>
+            <path d="M18 11C18 6 23 4 26 5C25 9 22 11 18 11Z" fill="#D7FFB8"/>
+            <path d="M18 11C18 7 13 5 10 6C11 10 14 11 18 11Z" fill="#89E219"/>
+            <circle cx="14.5" cy="20.5" r="1.6" fill="#132A1C"/>
+            <circle cx="21.5" cy="20.5" r="1.6" fill="#132A1C"/>
+            <path d="M15.5 24C16.5 25.2 19.5 25.2 20.5 24" stroke="#132A1C" stroke-width="1.6" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="text-left">
+          <div class="font-display font-black text-lg leading-none tracking-tight text-slate-900">
+            KONJAC<span class="text-[#58CC02]">LATE</span>
+          </div>
+          <div class="text-[10px] font-extrabold text-[#46A302] tracking-wide uppercase hidden sm:block">Interpretation Studio</div>
+        </div>
+      </button>
+
+      <!-- Center Nav Tabs -->
+      <nav class="hidden sm:flex items-center gap-1.5 bg-[#F6FDF2] p-1 rounded-2xl border border-[#D7FFB8]">
+        <button id="tab-hub" onclick="navigate('home')" class="px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all bg-[#58CC02] text-white shadow-sm">
+          Practice Hub
+        </button>
+        <button id="tab-admin" onclick="navigate('admin')" class="px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all text-slate-600 hover:text-slate-900">
+          Admin Mode
+        </button>
+      </nav>
+
+      <!-- Right Controls: Streak, Mode Pill, Mobile Admin Toggle -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <!-- Streak Counter Pill -->
+        <button onclick="showStreakInfo()" title="Your completed exercise streak" class="flex items-center gap-1.5 px-3.5 py-1.5 rounded-2xl bg-[#FFF7ED] border-2 border-[#FF9600] border-b-[3px] border-b-[#D97706] text-[#C2410C] font-extrabold text-xs sm:text-sm hover:bg-[#FFEDD5] transition-colors">
+          <span class="flame-anim text-base leading-none">🔥</span>
+          <span>Streak: <strong id="nav-streak-count" class="text-[#FF9600]">0</strong></span>
+        </button>
+
+        <!-- Interactive Active Mode Switcher Pill -->
+        <button id="nav-mode-pill" onclick="toggleMode()" title="Click to switch between PRACTICE and CHALLENGE mode" class="hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-blue-50 text-[#2B75FF] border-2 border-blue-200 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer">
+          <span id="nav-mode-dot" class="w-2 h-2 rounded-full bg-[#2B75FF]"></span>
+          <span id="nav-mode-text">PRACTICE</span>
+          <span class="text-[10px] opacity-70 ml-0.5">⇄</span>
+        </button>
+
+        <!-- Mobile Admin Button -->
+        <button id="nav-admin-btn" onclick="toggleAdminView()" class="sm:hidden inline-flex items-center gap-1 px-3 py-2 rounded-2xl text-xs font-bold btn-3d-white">
+          <span id="nav-admin-label">Admin</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN DYNAMIC APP CONTAINER ==================== -->
+  <main id="app-root" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 pb-20"></main>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- ==================== CUSTOM MODAL (NO ALERT / CONFIRM) ==================== -->
+  <div id="custom-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/45 backdrop-blur-sm p-4">
+    <div class="bg-white rounded-[28px] max-w-md w-full p-6 shadow-2xl border-2 border-[#D7FFB8] animate-view">
+      <h3 id="modal-title" class="font-display text-xl font-extrabold text-slate-900 mb-2"></h3>
+      <div id="modal-body" class="text-sm text-slate-600 leading-relaxed mb-6"></div>
+      <div id="modal-actions" class="flex justify-end gap-2.5"></div>
+    </div>
+  </div>
+
+  <!-- ==================== APPLICATION SCRIPT ==================== -->
+  <script>
+    /*************************************************************************
+     * 1. KONJAC SPROUT MASCOT & 13 CUSTOM FLAT SVG ILLUSTRATIONS
+     *************************************************************************/
+    function getMascotSVG(size = 88) {
+      return `
+        <svg width="${size}" height="${size}" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 64C24 41 40 26 60 26C80 26 96 41 96 64" stroke="#46A302" stroke-width="7" stroke-linecap="round"/>
+          <path d="M60 32C60 17 75 11 85 15C82 26 72 32 60 32Z" fill="#89E219" stroke="#46A302" stroke-width="2.5"/>
+          <path d="M60 32C60 20 46 14 37 18C40 28 49 32 60 32Z" fill="#58CC02" stroke="#46A302" stroke-width="2.5"/>
+          <rect x="28" y="34" width="64" height="62" rx="30" fill="#EEFFDB" stroke="#58CC02" stroke-width="3.5"/>
+          <ellipse cx="42" cy="69" rx="5.5" ry="3.2" fill="#FDA4AF" opacity="0.75"/>
+          <ellipse cx="78" cy="69" rx="5.5" ry="3.2" fill="#FDA4AF" opacity="0.75"/>
+          <circle cx="48" cy="61" r="4.2" fill="#132A1C"/>
+          <circle cx="49.5" cy="59.5" r="1.4" fill="#FFFFFF"/>
+          <circle cx="72" cy="61" r="4.2" fill="#132A1C"/>
+          <circle cx="73.5" cy="59.5" r="1.4" fill="#FFFFFF"/>
+          <path d="M53 71C55.5 74.5 64.5 74.5 67 71" stroke="#132A1C" stroke-width="3" stroke-linecap="round"/>
+          <rect x="16" y="54" width="14" height="26" rx="7" fill="#58CC02" stroke="#46A302" stroke-width="2.5"/>
+          <rect x="90" y="54" width="14" height="26" rx="7" fill="#58CC02" stroke="#46A302" stroke-width="2.5"/>
+          <path d="M96 76C94 86 84 88 74 86" stroke="#46A302" stroke-width="3" stroke-linecap="round"/>
+          <circle cx="72" cy="86" r="4" fill="#FF9600" stroke="#D97706" stroke-width="2"/>
+        </svg>
+      `;
+    }
+
+    function getExerciseIllustrationSVG(id) {
+      const svgs = {
+        E1: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#DBEAFE"/>
+          <circle cx="325" cy="48" r="26" fill="#BFDBFE"/>
+          <path d="M0 144 Q100 120 200 142 T400 135 L400 200 L0 200 Z" fill="#3B82F6"/>
+          <path d="M0 164 Q120 146 240 166 T400 158 L400 200 L0 200 Z" fill="#1D4ED8"/>
+          <g fill="#64748B"><circle cx="115" cy="64" r="28"/><circle cx="150" cy="56" r="34"/><circle cx="192" cy="66" r="26"/><rect x="115" y="64" width="77" height="28"/></g>
+          <g stroke="#60A5FA" stroke-width="3.5" stroke-linecap="round"><line x1="120" y1="102" x2="110" y2="125"/><line x1="145" y1="104" x2="135" y2="127"/><line x1="170" y1="102" x2="160" y2="125"/><line x1="195" y1="104" x2="185" y2="127"/></g>
+          <path d="M250 138 L315 138 L302 156 L260 156 Z" fill="#FF9600"/>
+          <rect x="276" y="118" width="16" height="20" rx="3" fill="#FFFFFF"/>
+        </svg>`,
+        E2: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#FEF3C7"/>
+          <circle cx="320" cy="50" r="24" fill="#FDE047"/>
+          <path d="M0 132 L175 132 L192 162 L212 132 L400 132 L400 200 L0 200 Z" fill="#D97706"/>
+          <path d="M180 132 L198 158 L186 184 L208 200" stroke="#78350F" stroke-width="6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="70" y="62" width="58" height="70" rx="5" fill="#FFFFFF" stroke="#92400E" stroke-width="3" transform="rotate(-4 99 97)"/>
+          <rect x="255" y="52" width="64" height="80" rx="5" fill="#FFFFFF" stroke="#92400E" stroke-width="3" transform="rotate(4 287 92)"/>
+          <path d="M50 84 Q40 94 50 104 M336 74 Q346 84 336 94" stroke="#F59E0B" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        E3: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#E0F2FE"/>
+          <circle cx="200" cy="100" r="68" fill="#38BDF8" opacity="0.25"/>
+          <circle cx="200" cy="100" r="46" fill="#0284C7" opacity="0.35"/>
+          <circle cx="200" cy="100" r="18" fill="#FFFFFF"/>
+          <path d="M135 62 Q200 24 268 70 M265 138 Q200 176 132 130" stroke="#0369A1" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <path d="M150 96 Q178 52 240 68 M250 104 Q222 148 160 132" stroke="#0EA5E9" stroke-width="6" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        E4: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#DCFCE7"/>
+          <rect x="0" y="158" width="400" height="42" fill="#58CC02"/>
+          <ellipse cx="200" cy="54" rx="76" ry="18" fill="#64748B"/>
+          <ellipse cx="200" cy="78" rx="54" ry="13" fill="#94A3B8"/>
+          <ellipse cx="200" cy="100" rx="36" ry="10" fill="#CBD5E1"/>
+          <ellipse cx="200" cy="122" rx="22" ry="8" fill="#94A3B8"/>
+          <ellipse cx="200" cy="142" rx="12" ry="5" fill="#64748B"/>
+          <path d="M196 146 L204 146 L200 162 Z" fill="#475569"/>
+          <rect x="64" y="128" width="40" height="30" rx="3" fill="#FFFFFF" stroke="#46A302" stroke-width="2.5"/>
+          <path d="M58 130 L84 110 L110 130 Z" fill="#EF4444"/>
+        </svg>`,
+        E5: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#E0F2FE"/>
+          <rect x="62" y="55" width="54" height="90" rx="4" fill="#94A3B8"/>
+          <rect x="132" y="38" width="66" height="107" rx="4" fill="#64748B"/>
+          <rect x="218" y="64" width="56" height="81" rx="4" fill="#94A3B8"/>
+          <rect x="292" y="80" width="48" height="65" rx="4" fill="#64748B"/>
+          <path d="M0 138 Q65 124 130 138 T260 138 T400 138 L400 200 L0 200 Z" fill="#0EA5E9"/>
+          <path d="M0 160 Q80 148 160 160 T320 160 T400 156 L400 200 L0 200 Z" fill="#0284C7"/>
+          <rect x="160" y="122" width="54" height="22" rx="8" fill="#FF9600"/>
+          <rect x="172" y="112" width="28" height="12" rx="4" fill="#FEF08A"/>
+        </svg>`,
+        E6: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#FEF3C7"/>
+          <circle cx="200" cy="104" r="62" fill="#38BDF8"/>
+          <path d="M160 80 Q180 65 205 78 Q225 90 212 115 Q195 125 170 112 Z" fill="#58CC02"/>
+          <path d="M225 115 Q245 105 256 125 Q245 148 220 145 Z" fill="#58CC02"/>
+          <rect x="62" y="52" width="80" height="44" rx="14" fill="#FFFFFF"/>
+          <text x="102" y="80" text-anchor="middle" font-size="18" font-weight="800" fill="#D97706">Hello!</text>
+          <rect x="258" y="102" width="84" height="44" rx="14" fill="#FFFFFF"/>
+          <text x="300" y="130" text-anchor="middle" font-size="16" font-weight="800" fill="#46A302">Xin chào</text>
+        </svg>`,
+        E7: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#E0E7FF"/>
+          <rect x="105" y="75" width="190" height="95" rx="8" fill="#FFFFFF"/>
+          <path d="M90 80 L200 32 L310 80 Z" fill="#4F46E5"/>
+          <rect x="180" y="118" width="40" height="52" rx="6" fill="#818CF8"/>
+          <rect x="128" y="102" width="32" height="26" rx="5" fill="#C7D2FE"/>
+          <rect x="240" y="102" width="32" height="26" rx="5" fill="#C7D2FE"/>
+          <circle cx="200" cy="60" r="10" fill="#FDE047"/>
+          <rect x="0" y="168" width="400" height="32" fill="#58CC02"/>
+        </svg>`,
+        E8: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#F3E8FF"/>
+          <rect x="115" y="65" width="170" height="105" rx="10" fill="#FFFFFF"/>
+          <rect x="135" y="88" width="22" height="82" fill="#E9D5FF"/>
+          <rect x="189" y="88" width="22" height="82" fill="#E9D5FF"/>
+          <rect x="243" y="88" width="22" height="82" fill="#E9D5FF"/>
+          <path d="M100 68 L200 28 L300 68 Z" fill="#7C3AED"/>
+          <circle cx="200" cy="118" r="24" fill="#58CC02"/>
+          <rect x="195" y="106" width="10" height="24" rx="2" fill="#FFFFFF"/>
+          <rect x="188" y="113" width="24" height="10" rx="2" fill="#FFFFFF"/>
+        </svg>`,
+        E9: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#ECFEFF"/>
+          <ellipse cx="200" cy="168" rx="155" ry="24" fill="#BAE6FD"/>
+          <g fill="none" stroke-width="7">
+            <circle cx="136" cy="86" r="24" stroke="#2563EB"/>
+            <circle cx="200" cy="86" r="24" stroke="#1E293B"/>
+            <circle cx="264" cy="86" r="24" stroke="#DC2626"/>
+            <circle cx="168" cy="110" r="24" stroke="#F59E0B"/>
+            <circle cx="232" cy="110" r="24" stroke="#58CC02"/>
+          </g>
+        </svg>`,
+        E10: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#FEF3C7"/>
+          <path d="M0 155 Q120 115 240 150 T400 140 L400 200 L0 200 Z" fill="#58CC02"/>
+          <circle cx="200" cy="96" r="56" fill="#D97706" stroke="#92400E" stroke-width="6"/>
+          <circle cx="200" cy="96" r="34" fill="#F59E0B"/>
+          <circle cx="200" cy="96" r="14" fill="#FEF08A"/>
+          <path d="M118 72 Q100 96 118 120 M282 72 Q300 96 282 120" stroke="#F59E0B" stroke-width="4" fill="none" stroke-linecap="round"/>
+        </svg>`,
+        E11: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#FEF9C3"/>
+          <path d="M0 142 Q110 92 220 132 T400 120 L400 200 L0 200 Z" fill="#58CC02"/>
+          <g transform="translate(120,108)"><circle r="24" fill="#FACC15"/><circle r="10" fill="#92400E"/></g>
+          <g transform="translate(210,88)"><circle r="30" fill="#F59E0B"/><circle r="13" fill="#78350F"/></g>
+          <g transform="translate(292,114)"><circle r="22" fill="#FACC15"/><circle r="9" fill="#92400E"/></g>
+        </svg>`,
+        E12: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#E2E8F0"/>
+          <rect x="60" y="70" width="46" height="100" rx="4" fill="#64748B"/>
+          <rect x="118" y="36" width="54" height="134" rx="4" fill="#334155"/>
+          <rect x="184" y="20" width="60" height="150" rx="4" fill="#1E293B"/>
+          <rect x="256" y="55" width="48" height="115" rx="4" fill="#475569"/>
+          <rect x="314" y="88" width="40" height="82" rx="4" fill="#64748B"/>
+          <g fill="#FDE047">
+            <rect x="130" y="52" width="10" height="12"/><rect x="150" y="52" width="10" height="12"/>
+            <rect x="198" y="38" width="12" height="14"/><rect x="220" y="38" width="12" height="14"/>
+            <rect x="198" y="66" width="12" height="14"/><rect x="220" y="66" width="12" height="14"/>
+          </g>
+          <rect x="0" y="168" width="400" height="32" fill="#0EA5E9"/>
+        </svg>`,
+        E13: `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <rect width="400" height="200" fill="#FFE4E6"/>
+          <path d="M200 32 L264 56 L264 106 C264 142 234 164 200 176 C166 164 136 142 136 106 L136 56 Z" fill="#FFFFFF" stroke="#E11D48" stroke-width="5"/>
+          <rect x="190" y="76" width="20" height="56" rx="4" fill="#E11D48"/>
+          <rect x="172" y="94" width="56" height="20" rx="4" fill="#E11D48"/>
+        </svg>`
+      };
+      return svgs[id] || `<svg viewBox="0 0 400 200" class="w-full h-full" preserveAspectRatio="xMidYMid slice">
+        <rect width="400" height="200" fill="#EEFFDB"/>
+        <circle cx="200" cy="100" r="46" fill="#89E219"/>
+        <text x="200" y="110" text-anchor="middle" font-size="24" font-weight="900" fill="#46A302">${escapeHtml(id)}</text>
+      </svg>`;
+    }
+
+    /*************************************************************************
+     * 2. CONSTANTS, DESIGN TOKENS & ALL 13 EXERCISES (GOOGLE DRIVE MP3s)
+     *************************************************************************/
+    const MOTIVATIONAL_SLOGANS = [
+      '“Interpret meaning, not just words.”',
+      '“Chunk smart, speak smooth.”',
+      '“Every session builds your interpreting fluency.”',
+      '“Great preparation powers 80% of confident interpretation.”',
+      '“Keep your streak alive — turn listening reflexes into second nature.”'
+    ];
+
+    const TAG_STYLES = {
+      'Environment': { bg: '#ECFDF5', text: '#047857', border: '#A7F3D0', dot: '#10B981' },
+      'Culture':     { bg: '#FFFBEB', text: '#B45309', border: '#FDE68A', dot: '#F59E0B' },
+      'Education':   { bg: '#EEF2FF', text: '#4338CA', border: '#C7D2FE', dot: '#6366F1' },
+      'Policy':      { bg: '#FFF1F2', text: '#BE123C', border: '#FECDD3', dot: '#F43F5E' },
+      'Urban':       { bg: '#F1F5F9', text: '#334155', border: '#CBD5E1', dot: '#64748B' },
+      'Society':     { bg: '#ECFEFF', text: '#0E7490', border: '#A5F3FC', dot: '#06B6D4' }
+    };
+
+    const AVAILABLE_TAGS = Object.keys(TAG_STYLES);
+
+    // Exact Level Color Matrix
+    function getLevelStyle(level, mode) {
+      const lv = Number(level);
+      if (mode === 'CHALLENGE') {
+        if (lv === 1) return { bg: '#FFC9CC', text: '#6E0F17', label: 'Level 1' };
+        if (lv === 2) return { bg: '#FF525A', text: '#FFFFFF', label: 'Level 2' };
+        return { bg: '#FF1F1F', text: '#FFFFFF', label: 'Level 3' };
+      } else {
+        if (lv === 1) return { bg: '#B0D5FF', text: '#0F2A5F', label: 'Level 1' };
+        if (lv === 2) return { bg: '#5CA8FF', text: '#FFFFFF', label: 'Level 2' };
+        return { bg: '#1F88FF', text: '#FFFFFF', label: 'Level 3' };
+      }
+    }
+
+    function getTagStyle(tag) {
+      return TAG_STYLES[tag] || { bg: '#F1F5F9', text: '#334155', border: '#CBD5E1', dot: '#64748B' };
+    }
+
+    function stripChunks(sentence) {
+      return String(sentence || '').replace(/\s*\/\s*/g, ' ').replace(/\s+/g, ' ').trim();
+    }
+
+    function extractDriveId(input) {
+      if (!input) return '';
+      const trimmed = input.trim();
+      const matchFile = trimmed.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+      if (matchFile) return matchFile[1];
+      const matchParam = trimmed.match(/[?&]id=([a-zA-Z0-9_-]{10,})/);
+      if (matchParam) return matchParam[1];
+      if (/^[a-zA-Z0-9_-]{15,}$/.test(trimmed)) return trimmed;
+      return trimmed;
+    }
+
+    // Complete 13-Exercise Database mapped 1-to-1 to Google Drive MP3s
+    const DEFAULT_EXERCISES = [
+      {
+        id: 'E1',
+        title: 'Typhoon Bualoi Damage in Quang Tri',
+        driveFileId: '1mitqKPApfd8Soh0qUROmeN6vMbRBrryl',
+        level: 2,
+        tag: 'Environment',
+        mode: 'BOTH',
+        summary: 'Breaking news report on severe damage caused by Typhoon Bualoi across central Vietnam and urgent rescue efforts at the Gianh River estuary in Quang Tri.',
+        brief: 'Typhoon Bualoi (Storm No. 10 in 2025) was the 30th tropical cyclone of the 2025 Pacific typhoon season, bringing heavy rainfall and strong winds to North Central Vietnam, particularly Quang Tri, Ha Tinh, and Nghe An.',
+        sentences: [
+          'Typhoon Bualoi has really battered / northern and central Vietnam / over the past couple of days, / bringing with it severe thunderstorms / and torrential rain.',
+          'Now, can you give me more details / in other localities?',
+          'Yes. Well, the consequences have been devastating / across multiple provinces / from collapsed homes to landslides and flash floods, / and authorities are racing to rescue missing people / and also mitigate the scale of the impact.',
+          'As of this afternoon, September the 29th, / typhoon Bualoi has left 12 people missing / and 9 injured / in Quang Tri province.',
+          'In the Gianh river estuary area / of Bac Trach commune, Quang Tri province, / rescue teams are urgently working / to salvage a sunken fishing vessel / and search for 9 missing crew members.'
+        ],
+        translationVi: 'Trong những ngày vừa qua, cơn bão Bualoi đã tàn phá miền Bắc và miền Trung Việt Nam, mang theo giông bão dữ dội và mưa lớn. Có thể thấy cơn bão đã gây ra thiệt hại nặng nề trên nhiều tỉnh thành, từ nhà cửa bị sập đến sạt lở đất và lũ quét, và các nhà chức trách đang khẩn trương giải cứu những người mất tích cũng như giảm thiểu quy mô tác động. Tính đến chiều nay, ngày 29 tháng 9, bão Bualoi đã khiến 12 người mất tích và 9 người bị thương ở tỉnh Quảng Trị. Tại khu vực cửa sông Gianh thuộc xã Bắc Trạch, tỉnh Quảng Trị, các đội cứu hộ đang khẩn trương làm việc để trục vớt một tàu cá bị chìm và tìm kiếm 9 thuyền viên mất tích.',
+        glossary: [
+          { term: 'batter', meaning: 'tàn phá', note: 'v. — used for storms/disasters' },
+          { term: 'thunderstorms', meaning: 'bão giông', note: 'n.' },
+          { term: 'torrential rain', meaning: 'mưa lớn, mưa xối xả', note: 'n. — news collocation' },
+          { term: 'devastating', meaning: 'thiệt hại nặng nề', note: 'adj.' },
+          { term: 'collapsed homes', meaning: 'nhà sập', note: 'n.' },
+          { term: 'landslides', meaning: 'sạt lở đất', note: 'n.' },
+          { term: 'flash floods', meaning: 'lũ quét', note: 'n.' },
+          { term: 'mitigate', meaning: 'giảm thiểu', note: 'v. — formal' },
+          { term: 'estuary area', meaning: 'khu vực cửa sông', note: 'n. — geographic term' },
+          { term: 'commune', meaning: 'xã', note: 'n. — administrative unit' },
+          { term: 'salvage', meaning: 'trục vớt', note: 'v. — maritime rescue' },
+          { term: 'sunken', meaning: 'bị chìm', note: 'adj.' },
+          { term: 'fishing vessel', meaning: 'tàu đánh cá', note: 'n.' },
+          { term: 'crew members', meaning: 'thuyền viên', note: 'n.' }
+        ]
+      },
+      {
+        id: 'E2',
+        title: 'Natural Disasters: Earthquakes',
+        driveFileId: '1IGIZ4NpdFfak_xRDy94d52_yc7lJrd3z',
+        level: 1,
+        tag: 'Environment',
+        mode: 'BOTH',
+        summary: 'A California native shares personal experiences with earthquakes and compares seismic frequency across Brazil, Chile, and Japan.',
+        brief: 'An overview of earthquakes from the perspective of a California native, contrasting minor tremors with major quakes and highlighting geographic differences worldwide.',
+        sentences: [
+          "First, let's talk about earthquakes.",
+          'For a lot of people, / this might just be the scariest disaster / because it can strike at any moment / without any notice.',
+          'That being said, / the vast majority of earthquakes are minor / and cause little to no damage.',
+          "As a California native, / I've obviously witnessed my share of earthquakes, / but I've only ever really experienced / one major earthquake.",
+          'It just so happens that I was at the gym, / and when the earthquake started, / all the weights and machines started shaking, / so I was definitely a little freaked out.',
+          'If you live in certain parts of the world, / you might never have experienced an earthquake / in your whole life.',
+          "For example, my Brazilian students usually tell me / that they've never been in an earthquake before, / while my students from Chile and Japan / feel an earthquake almost every week."
+        ],
+        translationVi: 'Đầu tiên, hãy nói về động đất. Đối với rất nhiều người, đây có thể chính là thảm họa đáng sợ nhất bởi vì nó có thể ập đến vào bất kỳ lúc nào mà không có bất kỳ sự báo trước nào. Nói như vậy nhưng đại đa số các trận động đất đều nhỏ và gây ra ít hoặc không có thiệt hại nào. Là một người bản xứ ở California, tôi cũng đã chứng kiến nhiều đợt động đất, nhưng tôi mới chỉ thực sự trải qua một trận động đất lớn duy nhất. Tình cờ lúc đó tôi đang ở phòng tập gym, và khi trận động đất bắt đầu, tất cả tạ và máy móc bắt đầu rung lắc khiến tôi có chút hoảng sợ. Nếu bạn sống ở một số khu vực nhất định trên thế giới, bạn có thể sẽ không bao giờ trải qua một trận động đất nào trong suốt cuộc đời mình. Ví dụ, các học sinh người Brazil của tôi thường nói rằng họ chưa bao giờ gặp động đất, trong khi các học sinh từ Chile và Nhật Bản lại cảm nhận thấy động đất hầu như mỗi tuần.',
+        glossary: [
+          { term: 'strike', meaning: 'ập đến, tấn công bất ngờ', note: 'v. — used for sudden disasters' },
+          { term: 'vast majority', meaning: 'đại đa số', note: 'n.' },
+          { term: 'freaked out', meaning: 'hoảng sợ, phát hoảng', note: 'adj. — informal' },
+          { term: 'minor', meaning: 'nhỏ, nhẹ', note: 'adj.' },
+          { term: 'California native', meaning: 'người bản xứ California', note: 'n.' }
+        ]
+      },
+      {
+        id: 'E3',
+        title: 'Natural Disasters: Hurricanes',
+        driveFileId: '1BDxJJ3vDxP2EUQ4MMjn6xLGJQNBNYKCB',
+        level: 2,
+        tag: 'Environment',
+        mode: 'BOTH',
+        summary: "Examining the destructive power of hurricanes, featuring Hurricane Katrina's impact on New Orleans and coastal threats in the U.S.",
+        brief: 'A short talk discussing how hurricanes form a constant threat to the U.S. south and east coasts, using Category 5 Hurricane Katrina as a historical benchmark.',
+        sentences: [
+          'Hurricanes can be some of the most destructive events / imaginable.',
+          'Take Hurricane Katrina, / for instance.',
+          'This category 5 hurricane / absolutely devastated the city of New Orleans / and caused almost 2,000 deaths / and over $125 billion dollars in damage.',
+          'Of course, not all hurricanes are this catastrophic, / but all hurricanes cause some damage / when they hit land.',
+          "Thankfully, I've never been affected by a hurricane before, / since I'm from the west coast of the U.S., / which is never affected by hurricanes.",
+          'But for people living on the south and east coasts, / these storms pose a constant threat.'
+        ],
+        translationVi: 'Bão cuồng phong có thể là một trong những sự kiện có sức tàn phá khủng khiếp nhất có thể tưởng tượng được. Lấy bão Katrina làm ví dụ. Cơn bão cấp 5 này đã hoàn toàn tàn phá thành phố New Orleans và gây ra gần 2.000 ca tử vong cùng hơn 125 tỷ đô la thiệt hại. Tất nhiên, không phải tất cả các cơn bão cuồng phong đều thảm khốc như thế này, nhưng tất cả đều gây ra một số thiệt hại khi đổ bộ vào đất liền. Thật may mắn là tôi chưa bao giờ bị ảnh hưởng bởi bão cuồng phong vì tôi đến từ bờ Tây Hoa Kỳ, nơi không bao giờ có loại bão này. Nhưng đối với những người sống ở bờ Nam và bờ Đông, những cơn bão này đặt ra một mối đe dọa thường trực.',
+        glossary: [
+          { term: 'category 5 hurricane', meaning: 'bão cuồng phong cấp 5', note: 'n. — Saffir-Simpson scale' },
+          { term: 'devastated', meaning: 'tàn phá hoàn toàn', note: 'v.' },
+          { term: 'catastrophic', meaning: 'thảm khốc', note: 'adj.' },
+          { term: 'hit land', meaning: 'đổ bộ vào đất liền', note: 'v. — synonym: make landfall' },
+          { term: 'pose a constant threat', meaning: 'đặt ra mối đe dọa thường trực', note: 'v. — strong collocation' }
+        ]
+      },
+      {
+        id: 'E4',
+        title: 'Natural Disasters: Tornadoes',
+        driveFileId: '1UL3otg0x4f9qjOG_rLQ_Yi4CmUex104t',
+        level: 1,
+        tag: 'Environment',
+        mode: 'BOTH',
+        summary: 'An introduction to tornadoes across the flat plains of the American Midwest and how residents take underground shelter.',
+        brief: 'Tornadoes frequently occur in the flat central plains of the United States—often called Tornado Alley—including Oklahoma, Kansas, and Nebraska.',
+        sentences: [
+          'Tornadoes are a phenomenon / that happen in the middle of the U.S., / in states like Oklahoma, Kansas, and Nebraska, / where the landscape is really flat.',
+          "You might've seen tornadoes / featured in American movies before, / where the people have to take shelter underground / and wait for the tornado to pass by their town.",
+          "I'm glad that I've never gotten caught / in the path of a tornado before."
+        ],
+        translationVi: 'Lốc xoáy là một hiện tượng xảy ra ở miền Trung Hoa Kỳ, tại các tiểu bang như Oklahoma, Kansas và Nebraska, nơi địa hình rất bằng phẳng. Bạn có thể đã từng thấy lốc xoáy xuất hiện trong các bộ phim Mỹ trước đây, nơi mọi người phải trú ẩn dưới lòng đất và chờ cho cơn lốc xoáy đi qua thị trấn của họ. Tôi rất mừng vì mình chưa bao giờ rơi vào quỹ đạo của một cơn lốc xoáy nào.',
+        glossary: [
+          { term: 'phenomenon', meaning: 'hiện tượng', note: 'n. — plural: phenomena' },
+          { term: 'landscape', meaning: 'địa hình, cảnh quan', note: 'n.' },
+          { term: 'take shelter underground', meaning: 'trú ẩn dưới lòng đất', note: 'v.' },
+          { term: 'pass by', meaning: 'đi qua', note: 'v.' },
+          { term: 'get caught in the path of', meaning: 'rơi vào quỹ đạo của', note: 'v. — idiomatic expression' }
+        ]
+      },
+      {
+        id: 'E5',
+        title: 'Natural Disasters: Floods',
+        driveFileId: '1zEPqtQaiz9bk4cDIo7-eQYkEX04dgxHG',
+        level: 1,
+        tag: 'Environment',
+        mode: 'BOTH',
+        summary: 'How heavy rain and urban infrastructure challenges trigger severe flooding and traffic chaos in major cities like Mexico.',
+        brief: 'A discussion on urban flooding worldwide, focusing on how low-altitude areas and limited drainage infrastructure turn city streets into rivers during the rainy season in Mexico.',
+        sentences: [
+          'Alright, one more type of natural disaster / that affects people all over the world / is floods.',
+          "If you live in a city / that doesn't have a high level of infrastructure, / it's likely that you've seen some flooding before.",
+          "In Mexico, for example, / many parts of the big cities flood / every time there's heavy rain.",
+          'The parts of the city that are at a lower altitude / become like lakes and rivers, / and drivers have a hard time navigating.',
+          'Sometimes, the cars just stop / and wait for the rain to subside / and for the water to clear out, / turning traffic into a complete mess.',
+          'Floods may not be the scariest natural disaster, / but they can be a huge inconvenience, / and they can become dangerous.'
+        ],
+        translationVi: 'Thêm một loại thảm họa thiên nhiên nữa ảnh hưởng đến mọi người trên khắp thế giới đó là lũ lụt. Nếu bạn sống ở một thành phố không có cơ sở hạ tầng phát triển cao, rất có thể bạn đã từng chứng kiến cảnh ngập lụt. Ví dụ như ở Mexico, nhiều khu vực của các thành phố lớn bị ngập mỗi khi có mưa lớn. Những phần của thành phố nằm ở độ cao thấp hơn trở nên giống như ao hồ và sông ngòi, và các tài xế gặp rất nhiều khó khăn để di chuyển. Đôi khi, ô tô chỉ dừng lại và chờ cho mưa ngớt và nước rút bớt, khiến giao thông trở thành một mớ hỗn độn hoàn toàn. Lũ lụt tuy có thể không phải là thảm họa thiên nhiên đáng sợ nhất, nhưng chúng gây bất tiện lớn và có thể trở nên nguy hiểm.',
+        glossary: [
+          { term: 'infrastructure', meaning: 'cơ sở hạ tầng', note: 'n.' },
+          { term: 'altitude', meaning: 'độ cao so với mực nước biển', note: 'n.' },
+          { term: 'navigate', meaning: 'di chuyển, điều hướng', note: 'v.' },
+          { term: 'subside', meaning: 'ngớt, dịu xuống', note: 'v. — used for rain/water' },
+          { term: 'clear out', meaning: 'rút bớt, quang đãng', note: 'v.' },
+          { term: 'inconvenience', meaning: 'sự bất tiện', note: 'n.' }
+        ]
+      },
+      {
+        id: 'E6',
+        title: 'Culture Shock',
+        driveFileId: '1eEo066FrxU-buv9VObElMoNoXNOlDCMq',
+        level: 1,
+        tag: 'Culture',
+        mode: 'BOTH',
+        summary: 'A concise reflection on why culture shock is inevitable when living abroad due to differing values, norms, and miscommunications.',
+        brief: 'Moving to a foreign country exposes newcomers to unfamiliar social norms and communication styles, making culture shock a natural and expected part of the adaptation process.',
+        sentences: [
+          "Regardless of how interested you are / in a foreign culture, / you'll never adopt 100% / of their values and norms.",
+          'Culture shock is inevitable / when you move abroad / because you have so many opportunities / for misunderstandings, miscommunications, / and exposure to foreign ideas.',
+          "I've experienced my share of culture shock / throughout my time abroad.",
+          "It's something that you simply have to expect / when you put yourself / in this sort of situation."
+        ],
+        translationVi: 'Bất kể bạn có hứng thú với một nền văn hóa nước ngoài đến đâu, bạn sẽ không bao giờ có thể tiếp nhận 100% các giá trị và chuẩn mực của họ. Sốc văn hóa là điều không thể tránh khỏi khi bạn chuyển ra nước ngoài sinh sống, bởi vì bạn sẽ gặp vô vàn tình huống dễ dẫn đến hiểu lầm, giao tiếp sai lệch và tiếp xúc với những tư tưởng xa lạ. Tôi cũng đã trải qua không ít lần sốc văn hóa trong suốt thời gian sống ở nước ngoài. Đó đơn giản là điều bạn phải lường trước khi đặt bản thân vào hoàn cảnh như vậy.',
+        glossary: [
+          { term: 'adopt', meaning: 'tiếp nhận, làm theo', note: 'v. — cultural context' },
+          { term: 'values and norms', meaning: 'các giá trị và chuẩn mực', note: 'n. — sociology term' },
+          { term: 'inevitable', meaning: 'không thể tránh khỏi, tất yếu', note: 'adj.' },
+          { term: 'misunderstandings', meaning: 'sự hiểu lầm', note: 'n.' },
+          { term: 'miscommunications', meaning: 'sự truyền đạt sai lệch', note: 'n.' },
+          { term: 'exposure', meaning: 'sự tiếp xúc, trải nghiệm trực tiếp', note: 'n.' }
+        ]
+      },
+      {
+        id: 'E7',
+        title: 'Sharada Secondary Boarding School Opening Ceremony',
+        driveFileId: '1AJ63XyrISKfq9TnCuxiqwQHP0wsAy295',
+        level: 2,
+        tag: 'Education',
+        mode: 'BOTH',
+        summary: 'An inspiring opening ceremony speech encouraging students to embrace discipline, daily effort, and the transformative power of education.',
+        brief: 'Delivered at the opening ceremony of Sharada Secondary Boarding School, this motivational address highlights determination, learning from mistakes, and consistent effort over perfection.',
+        sentences: [
+          'Good morning respected teachers / and my dear students; / today, I want every one of you / to understand one powerful truth: / your future is shaped by what you do today.',
+          'You do not need to be perfect / to become successful; / you need determination, discipline, / and the courage to keep improving / even when progress feels slow.',
+          'Never be afraid of making mistakes, / because mistakes teach you valuable lessons / and failure gives you the opportunity / to learn, grow, and return stronger than before.',
+          "Never compare your journey / with someone else's; / every student has unique strengths, different challenges, / and the potential to achieve something meaningful / through consistent effort.",
+          'Success does not come from wishing alone; / it comes from daily effort, regular practice, / responsible choices, / and the determination to finish what you start.',
+          'Education gives you knowledge, / builds your confidence, / and opens doors to new opportunities, / so respect your teachers, value your time, / and make every lesson count.',
+          'Your background does not define your limits; / your attitude, habit, and hard work / shape the person you become / and the future you create.',
+          'Dream big, work hard, / and never give up on learning; / believe in your abilities, take action today, / and become the person you are capable of becoming. Thank you.'
+        ],
+        translationVi: 'Kính thưa các thầy cô giáo cùng toàn thể các em học sinh thân mến. Hôm nay, tôi muốn tất cả các em hiểu rõ một chân lý mạnh mẽ: Tương lai của các em được định hình bởi những gì các em làm ngay ngày hôm nay. Các em không cần phải hoàn hảo mới có thể thành công; cái các em cần là sự quyết tâm, kỷ luật và lòng dũng cảm để không ngừng tiến bộ ngay cả khi sự tiến lên ấy có vẻ chậm chạp. Đừng bao giờ sợ mắc sai lầm, bởi sai lầm mang lại những bài học quý giá và thất bại trao cho các em cơ hội học hỏi, trưởng thành và trở lại mạnh mẽ hơn xưa. Đừng bao giờ so sánh hành trình của mình với người khác; mỗi học sinh đều có thế mạnh độc đáo, thử thách riêng và tiềm năng đạt được điều ý nghĩa qua sự nỗ lực bền bỉ. Thành công không đến chỉ từ mong ước, mà đến từ nỗ lực mỗi ngày, luyện tập thường xuyên, những lựa chọn có trách nhiệm và quyết tâm hoàn thành những gì đã bắt đầu. Giáo dục mang lại tri thức, bồi đắp sự tự tin và mở ra cơ hội mới; hãy kính trọng thầy cô, trân trọng thời gian và tận dụng tối đa từng bài học. Hoàn cảnh xuất thân không định nghĩa giới hạn của các em; chính thái độ, thói quen và sự chăm chỉ mới nhào nặn nên con người các em trở thành và tương lai các em kiến tạo. Hãy ước mơ lớn, chăm chỉ và không bao giờ ngừng học hỏi; hãy tin vào năng lực bản thân, hành động ngay hôm nay và trở thành phiên bản tốt nhất mà các em có thể đạt tới. Xin trân trọng cảm ơn.',
+        glossary: [
+          { term: 'determination', meaning: 'sự quyết tâm', note: 'n.' },
+          { term: 'discipline', meaning: 'tính kỷ luật', note: 'n.' },
+          { term: 'consistent effort', meaning: 'sự nỗ lực bền bỉ, đều đặn', note: 'n.' },
+          { term: 'responsible choices', meaning: 'những lựa chọn có trách nhiệm', note: 'n.' },
+          { term: 'make every lesson count', meaning: 'tận dụng tối đa từng bài học', note: 'v. — motivational idiom' },
+          { term: 'background', meaning: 'hoàn cảnh xuất thân', note: 'n.' },
+          { term: 'attitude', meaning: 'thái độ', note: 'n.' },
+          { term: 'capable of', meaning: 'có năng lực, có khả năng', note: 'adj. — followed by V-ing' }
+        ]
+      },
+      {
+        id: 'E8',
+        title: 'Dai Nam University Opening Ceremony',
+        driveFileId: '1hDnOo9Ws-DdaAf98zvD7yvINoLEMDkF1',
+        level: 3,
+        tag: 'Education',
+        mode: 'BOTH',
+        summary: 'A formal diplomatic and academic address welcoming 200 pioneering Indian medical students to Dai Nam University in northern Vietnam.',
+        brief: 'This ceremonial speech marks a historic milestone in Vietnam–India educational cooperation: the first full-scale medical program in northern Vietnam welcoming an inaugural cohort of 200 Indian students.',
+        sentences: [
+          'Excellencies, distinguished guests, / respected colleagues, parents, / and dear students.',
+          'Today as we stand here together / in this campus of Dai Nam University, / we are witnessing a moment / that will be remembered for generations.',
+          'For the first time in northern Vietnam, / a full-scale medical program has been created / to welcome Indian students, / and 200 young men and women from across India / have traveled here with hope in their eyes / and purpose in their hearts.',
+          'This is no ordinary intake of students; / this is the first batch, the pioneering class, / the foundation of something that will grow / far beyond what we can imagine today.',
+          'We are honored to welcome our distinguished dignitaries, / our valued partners in education and healthcare, / and the dedicated faculty and staff / who have made this day possible.',
+          'On behalf of Dai Nam University, / let me again extend my heartfelt gratitude / to all of the honored guests / who have joined us to witness this historic milestone: / the beginning of a new chapter / in Vietnam-India cooperation. Thank you.'
+        ],
+        translationVi: 'Kính thưa các vị đại biểu, các vị khách quý, kính thưa quý đồng nghiệp, quý bậc phụ huynh cùng toàn thể các em sinh viên thân mến. Hôm nay, khi cùng đứng tại khuôn viên Trường Đại học Đại Nam này, chúng ta đang chứng kiến một khoảnh khắc sẽ còn được ghi nhớ qua nhiều thế hệ. Lần đầu tiên tại miền Bắc Việt Nam, một chương trình đào tạo y khoa quy mô toàn diện đã được xây dựng để chào đón các sinh viên Ấn Độ, và 200 nam nữ thanh niên từ khắp mọi miền đất nước Ấn Độ đã đặt chân đến đây với ánh mắt tràn đầy hy vọng và trái tim mang theo lý tưởng cao đẹp. Đây không phải là một khóa tuyển sinh thông thường; đây chính là lứa sinh viên đầu tiên, thế hệ tiên phong, là nền móng cho một công trình sẽ còn vươn xa hơn tất cả những gì chúng ta có thể hình dung ngày hôm nay. Chúng tôi vô cùng vinh dự được chào đón các vị lãnh đạo cấp cao, các đối tác quý báu trong lĩnh vực giáo dục và y tế, cùng đội ngũ giảng viên, cán bộ nhân viên tận tụy đã làm nên ngày trọng đại hôm nay. Thay mặt Trường Đại học Đại Nam, một lần nữa tôi xin gửi lời tri ân sâu sắc nhất tới toàn thể các vị khách quý đã đến chứng kiến cột mốc lịch sử này: sự khởi đầu cho một chương mới trong quan hệ hợp tác Việt Nam - Ấn Độ. Xin trân trọng cảm ơn.',
+        glossary: [
+          { term: 'Excellencies', meaning: 'các vị đại biểu, ngài', note: 'n. — diplomatic salutation' },
+          { term: 'full-scale medical program', meaning: 'chương trình đào tạo y khoa quy mô toàn diện', note: 'n.' },
+          { term: 'intake', meaning: 'khóa tuyển sinh, đợt nhập học', note: 'n. — academic term' },
+          { term: 'pioneering class', meaning: 'thế hệ tiên phong, khóa đầu tiên', note: 'n.' },
+          { term: 'dignitaries', meaning: 'các vị lãnh đạo cấp cao', note: 'n. — formal' },
+          { term: 'faculty and staff', meaning: 'đội ngũ giảng viên và cán bộ nhân viên', note: 'n.' },
+          { term: 'heartfelt gratitude', meaning: 'lời tri ân sâu sắc', note: 'n.' },
+          { term: 'historic milestone', meaning: 'cột mốc lịch sử', note: 'n.' }
+        ]
+      },
+      {
+        id: 'E9',
+        title: 'London Olympic Games 2012',
+        driveFileId: '16pkCjndi-iuGyHpq5vYu7ummVEvxElFo',
+        level: 3,
+        tag: 'Culture',
+        mode: 'BOTH',
+        summary: 'Ceremonial welcome speech from the London 2012 Olympic Opening Ceremony celebrating royal protocol, peace, and the spirit of sport.',
+        brief: 'An excerpt from the London 2012 Olympic Games Opening Ceremony featuring formal royal salutations and a tribute to the purity, drama, and unifying power of international sport.',
+        sentences: [
+          'Your Majesty, Your Majesties, / Your Royal Highnesses, President Rogge, / distinguished guests, ladies and gentlemen.',
+          'To everyone in this stadium / attending our opening ceremony, / to every athlete waiting, ready, / prepared to take part in these games, / and to everyone in every city and village in the world / watching as we begin.',
+          'Welcome to London! / Welcome to the 2012 Olympic Games! / Welcome from every one of us!',
+          'I have never been so proud to be British / and to be a part of the Olympic movement / as I am on this day, at this moment.',
+          'The Olympics brings together / the people of the world / in harmony and friendship and peace / to celebrate what is best about mankind.',
+          'All my life, I have loved sport; / there is a truth to sport, a purity, / a drama, and intensity, / a spirit that makes it irresistible to take part in, / and irresistible to watch.'
+        ],
+        translationVi: 'Kính thưa Nữ hoàng, kính thưa Quốc vương và Hoàng hậu các nước, kính thưa các thành viên Hoàng gia, ngài Chủ tịch Rogge, các vị khách quý, thưa toàn thể quý vị. Gửi tới tất cả mọi người có mặt tại sân vận động này dự lễ khai mạc, tới từng vận động viên đang chờ đợi và sẵn sàng bước vào tranh tài, cùng mọi người ở mọi thành phố và làng mạc trên khắp thế giới đang dõi theo khi chúng tôi bắt đầu. Chào mừng đến với London! Chào mừng đến với Thế vận hội Olympic 2012! Lời chào mừng nồng nhiệt từ tất cả chúng tôi! Tôi chưa bao giờ cảm thấy tự hào khi là người dân nước Anh và là một phần của phong trào Olympic đến thế như vào ngày hôm nay, ngay tại khoảnh khắc này. Thế vận hội Olympic gắn kết nhân dân toàn thế giới trong sự hòa hợp, tình hữu nghị và hòa bình để tôn vinh những giá trị tốt đẹp nhất của nhân loại. Suốt cả cuộc đời mình, tôi luôn yêu thể thao; trong thể thao luôn tồn tại một chân lý, một sự thuần khiết, một kịch tính và sự quyết liệt, một tinh thần khiến người ta không thể cưỡng lại việc tham gia và cũng không thể rời mắt khi dõi theo.',
+        glossary: [
+          { term: 'Your Majesty / Your Majesties', meaning: 'Nữ hoàng / Quốc vương và Hoàng hậu', note: 'n. — royal protocol' },
+          { term: 'Your Royal Highnesses', meaning: 'Các thành viên Hoàng gia', note: 'n. — royal protocol' },
+          { term: 'opening ceremony', meaning: 'lễ khai mạc', note: 'n.' },
+          { term: 'Olympic movement', meaning: 'phong trào Olympic', note: 'n.' },
+          { term: 'harmony', meaning: 'sự hòa hợp', note: 'n.' },
+          { term: 'mankind', meaning: 'nhân loại', note: 'n.' },
+          { term: 'purity', meaning: 'sự thuần khiết', note: 'n.' },
+          { term: 'intensity', meaning: 'sự quyết liệt, cường độ cao', note: 'n.' },
+          { term: 'irresistible', meaning: 'không thể cưỡng lại', note: 'adj.' }
+        ]
+      },
+      {
+        id: 'E10',
+        title: 'Gia Lai Gong Festival (Part 1)',
+        driveFileId: '1gOxGImOodz5wWCX-EI81Fba8as-ojnzu',
+        level: 2,
+        tag: 'Culture',
+        mode: 'BOTH',
+        summary: "Spotlight on the 14-member Bahnar children's gong team preserving Central Highlands rhythms, dances, and traditional crafts.",
+        brief: 'The Central Highlands Gong Cultural Space is a UNESCO-recognized intangible cultural heritage. This first part highlights a young Bahnar gong troupe from To Tung Commune performing traditional rituals and crafts.',
+        sentences: [
+          'Among the highlights of the 2026 Gia Lai Gong Festival / is a 14-member Bahnar children gong team / from To Tung Commune.',
+          'Aged between 7 and 16, / the young performers have mastered the rhythms and dances / of their traditional festivals, / captivating audiences with their enthusiasm.',
+          'Our team has performed pieces / for the Buffalo Sacrifice ceremony / and the new rice celebration, / promoting our cultural identity / to friends both at home and abroad.',
+          "It's so much fun to immerse myself in this atmosphere, / where the trees and nature blend together / to give it a very distinctive cultural identity.",
+          'Traditional community life is also brought to the festival / through activities such as weaving, basketry, and rice pounding, / allowing visitors to experience traditions / passed down through generations.'
+        ],
+        translationVi: 'Một trong những điểm nổi bật của Lễ hội Cồng chiêng Gia Lai 2026 là đội cồng chiêng nhí 14 thành viên dân tộc Ba-na đến từ xã Tơ Tung. Ở độ tuổi từ 7 đến 16, các nghệ sĩ trẻ đã nằm lòng những giai điệu cũng như nhuần nhuyễn điệu múa của lễ hội truyền thống, cuốn hút khán giả bằng sự nhiệt huyết của mình. Đội của chúng tôi đã biểu diễn các tiết mục cho lễ hội đâm trâu và lễ mừng lúa mới, quảng bá bản sắc văn hóa tới bạn bè trong nước và quốc tế. Thật tuyệt vời khi được đắm mình trong bầu không khí này, nơi cây cối và thiên nhiên hòa quyện tạo nên một bản sắc văn hóa rất riêng biệt. Đời sống cộng đồng truyền thống cũng được tái hiện tại lễ hội qua các hoạt động như dệt vải, đan lát và giã gạo, giúp du khách trải nghiệm những truyền thống được lưu truyền qua nhiều thế hệ.',
+        glossary: [
+          { term: 'gong team', meaning: 'đội cồng chiêng', note: 'n.' },
+          { term: 'rhythms', meaning: 'nhịp điệu, giai điệu', note: 'n.' },
+          { term: 'captivating', meaning: 'cuốn hút, mê hoặc', note: 'adj.' },
+          { term: 'Buffalo Sacrifice ceremony', meaning: 'lễ hội đâm trâu', note: 'n. — Central Highlands ritual' },
+          { term: 'new rice celebration', meaning: 'lễ mừng lúa mới', note: 'n.' },
+          { term: 'cultural identity', meaning: 'bản sắc văn hóa', note: 'n.' },
+          { term: 'immerse oneself in', meaning: 'đắm mình vào', note: 'v.' },
+          { term: 'weaving', meaning: 'nghề dệt vải', note: 'n.' },
+          { term: 'basketry', meaning: 'nghề đan lát', note: 'n.' },
+          { term: 'rice pounding', meaning: 'giã gạo', note: 'n.' }
+        ]
+      },
+      {
+        id: 'E11',
+        title: 'Gia Lai Gong Festival (Part 2)',
+        driveFileId: '12ylbg1r2mXLqDeAIWJD0mV6FkumlO71_',
+        level: 2,
+        tag: 'Culture',
+        mode: 'BOTH',
+        summary: 'How the Gong Cultural Space Program pairs ethnic festivals with Chu Dang Ya wild sunflowers to share Central Highlands heritage.',
+        brief: 'Part 2 explores the broader Gong Cultural Space Program, where senior artisans and younger generations unite alongside blooming wild sunflowers at Chu Dang Ya to bring Central Highlands music to wider audiences.',
+        sentences: [
+          'As part of the Gong Cultural Space Program, / there are festivals of ethnic communities / alongside the blooming wild sunflowers / of Chu Dang Ya.',
+          'Visitors not only watch, / but also experience and immerse themselves / in these vibrant festivals.',
+          'From senior artisans to younger generations, / traditional gong music continues to resonate / with community life.',
+          'The 2026 Gia Lai Gong Festival / is bringing cultural traditions together / and helping the sounds of the Central Highlands / reach a wider audience.'
+        ],
+        translationVi: 'Nằm trong khuôn khổ Chương trình Không gian Văn hóa Cồng chiêng, các lễ hội của cộng đồng các dân tộc diễn ra bên cạnh mùa hoa dã quỳ nở rộ tại Chư Đăng Ya. Du khách không chỉ đứng xem mà còn trực tiếp trải nghiệm và hòa mình vào những lễ hội sôi động này. Từ các nghệ nhân lão làng đến thế hệ trẻ, âm nhạc cồng chiêng truyền thống tiếp tục vang vọng và hòa nhịp cùng đời sống cộng đồng. Lễ hội Cồng chiêng Gia Lai 2026 đang gắn kết các giá trị truyền thống văn hóa và đưa âm vang Tây Nguyên vươn xa tới đông đảo công chúng hơn.',
+        glossary: [
+          { term: 'wild sunflowers', meaning: 'hoa dã quỳ', note: 'n.' },
+          { term: 'ethnic communities', meaning: 'cộng đồng các dân tộc', note: 'n.' },
+          { term: 'senior artisans', meaning: 'các nghệ nhân cao tuổi / lão làng', note: 'n.' },
+          { term: 'resonate with', meaning: 'vang vọng, hòa nhịp cùng', note: 'v.' },
+          { term: 'Central Highlands', meaning: 'Tây Nguyên', note: 'n. — region of Vietnam' }
+        ]
+      },
+      {
+        id: 'E12',
+        title: 'The City of Hong Kong',
+        driveFileId: '1wl-aGlmO-lYwcmN3EdpUm3Q14Pys3lJy',
+        level: 1,
+        tag: 'Urban',
+        mode: 'BOTH',
+        summary: "A snappy urban snapshot of Hong Kong's extreme population density and why it became the world's most vertical city.",
+        brief: 'Hong Kong Island is a major global financial hub with one of the highest population densities on Earth—roughly 42,000 people per square mile—driving iconic vertical architecture.',
+        sentences: [
+          'There are around 42,000 people per square mile / on Hong Kong Island alone.',
+          "It's a global financial hub / with people flocking to it / from all over the world.",
+          'There are offices, apartment blocks, / a transport system, temples, / and over 7 million people / all crammed into one place.',
+          "And the only way to make it all fit / is by building up; / this is the world's most vertical city."
+        ],
+        translationVi: 'Riêng trên đảo Hồng Kông đã có khoảng 42.000 người trên mỗi dặm vuông. Đây là một trung tâm tài chính toàn cầu, nơi người dân từ khắp nơi trên thế giới đổ xô tới. Nơi đây có các tòa nhà văn phòng, khu chung cư, hệ thống giao thông, đền chùa và hơn 7 triệu người cùng tập trung dày đặc trong một không gian. Và cách duy nhất để chứa đủ tất cả chính là xây dựng vươn cao lên; đây chính là thành phố thẳng đứng nhất thế giới.',
+        glossary: [
+          { term: 'per square mile', meaning: 'trên mỗi dặm vuông', note: 'phr. — density unit' },
+          { term: 'global financial hub', meaning: 'trung tâm tài chính toàn cầu', note: 'n.' },
+          { term: 'flock to', meaning: 'đổ xô đến', note: 'v.' },
+          { term: 'apartment blocks', meaning: 'các khu chung cư', note: 'n.' },
+          { term: 'crammed into', meaning: 'nhồi nhét, tập trung dày đặc vào', note: 'adj.' },
+          { term: 'vertical city', meaning: 'thành phố thẳng đứng', note: 'n. — urban studies term' }
+        ]
+      },
+      {
+        id: 'E13',
+        title: 'Health Insurance in the US',
+        driveFileId: '1ittsYzJT98obf1Su_esGHBCcChsj9RN1',
+        level: 2,
+        tag: 'Policy',
+        mode: 'BOTH',
+        summary: 'Breaking down astronomical U.S. medical costs, monthly insurance premiums for singles and families, and why coverage remains essential.',
+        brief: 'Healthcare in the United States is famously expensive. This talk explains average monthly premiums ($300+ for individuals, $800+ for families) and why insurance is vital to protect against unexpected emergencies.',
+        sentences: [
+          "So first of all, it's important to talk about health insurance; / in the US, most people have health insurance / because without it, the cost of getting medical treatment / can be astronomical.",
+          "But there's still a problem here, / because the insurance itself / also costs a lot of money.",
+          "If you're single and you're just insuring yourself, / the average cost per month is well over $300, / whereas insuring your whole family / averages over $800 per month.",
+          "And even though you pay this huge amount of money / for your monthly premium, / you still have to pay more money / when you actually go to the doctor's office.",
+          'You might be thinking, / why do people pay this much money / instead of just not getting health insurance?',
+          "Well, if you don't go to the doctor much / and don't need any major operations, that would be fine, / but if something major happens or you get in an accident, / you're going to pay thousands and thousands of dollars / without insurance.",
+          "So really, in my opinion, / the main point of having insurance in the US / is to make sure you're covered / for any major unexpected events."
+        ],
+        translationVi: 'Trước hết, điều quan trọng là phải nói về bảo hiểm y tế; tại Mỹ, hầu hết mọi người đều mua bảo hiểm y tế vì nếu không có nó, chi phí điều trị y tế có thể cao ngất ngưởng. Tuy nhiên vẫn tồn tại một vấn đề là bản thân gói bảo hiểm cũng tốn rất nhiều tiền. Nếu bạn độc thân và chỉ mua cho bản thân, chi phí trung bình mỗi tháng đã vượt xa mức 300 đô la, trong khi mua cho cả gia đình trung bình tốn hơn 800 đô la mỗi tháng. Và ngay cả khi bạn đã đóng khoản phí bảo hiểm hàng tháng khổng lồ này, bạn vẫn phải trả thêm tiền khi thực sự đi khám bác sĩ. Có thể bạn đang tự hỏi tại sao mọi người lại trả nhiều tiền như vậy thay vì không mua bảo hiểm? Thực ra, nếu bạn ít đi khám và không cần các ca phẫu thuật lớn thì sẽ ổn, nhưng nếu có chuyện nghiêm trọng xảy ra hoặc bạn gặp tai nạn, bạn sẽ phải trả hàng nghìn đô la để điều trị nếu không có bảo hiểm. Vì vậy theo tôi, mục đích cốt lõi của việc có bảo hiểm tại Mỹ là để đảm bảo bạn được bảo vệ trước mọi sự cố bất ngờ nghiêm trọng.',
+        glossary: [
+          { term: 'health insurance', meaning: 'bảo hiểm y tế', note: 'n.' },
+          { term: 'medical treatment', meaning: 'điều trị y tế', note: 'n.' },
+          { term: 'astronomical', meaning: 'cao ngất ngưởng, đắt đỏ khủng khiếp', note: 'adj. — figurative for cost' },
+          { term: 'monthly premium', meaning: 'phí bảo hiểm đóng hàng tháng', note: 'n. — insurance term' },
+          { term: 'major operations', meaning: 'các ca phẫu thuật lớn', note: 'n.' },
+          { term: 'covered for', meaning: 'được bảo hiểm chi trả, được bảo vệ trước', note: 'adj.' },
+          { term: 'unexpected events', meaning: 'những sự cố bất ngờ', note: 'n.' }
+        ]
+      }
+    ];
+
+    /*************************************************************************
+     * 3. PERSISTENT STATE MANAGEMENT (LOCALSTORAGE V6)
+     *************************************************************************/
+    const STORAGE_KEYS = {
+      EXERCISES: 'konjaclate_exercises_v6',
+      STREAK: 'konjaclate_streak_v1'
+    };
+
+    function loadExercises() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.EXERCISES);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+        }
+      } catch (e) { console.warn('Could not load exercises:', e); }
+      return JSON.parse(JSON.stringify(DEFAULT_EXERCISES));
+    }
+
+    function saveExercises(list) {
+      try { localStorage.setItem(STORAGE_KEYS.EXERCISES, JSON.stringify(list)); } catch (e) {}
+    }
+
+    function loadStreak() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.STREAK);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          return {
+            streakCount: Number(parsed.streakCount) || 0,
+            completedIds: Array.isArray(parsed.completedIds) ? parsed.completedIds : [],
+            totalSessions: Number(parsed.totalSessions) || 0
+          };
+        }
+      } catch (e) {}
+      return { streakCount: 0, completedIds: [], totalSessions: 0 };
+    }
+
+    function saveStreak(data) {
+      try { localStorage.setItem(STORAGE_KEYS.STREAK, JSON.stringify(data)); } catch (e) {}
+    }
+
+    const state = {
+      view: 'home',
+      mode: 'PRACTICE',
+      exercises: loadExercises(),
+      streak: loadStreak(),
+      filters: { level: 'ALL', tag: 'ALL', search: '' },
+      selectedExerciseId: null,
+      params: {
+        speed: 1.0,
+        timerLimit: 0
+      },
+      interpret: {
+        segments: [],         // array of { sentences: string[], startRatio: number, endRatio: number }
+        currentIndex: 0,
+        phase: 'IDLE',        // 'IDLE' | 'PLAYING' | 'COUNTDOWN' | 'RECORDING' | 'PLAYBACK'
+        countdownVal: 2,
+        recSeconds: 0,
+        micSimulated: false,
+        recordings: [],
+        showHelper: false,
+        showChunking: false,
+        playbackProgress: 0,
+        audioError: false,
+        showEmbedPlayer: false,
+        localAudioUrl: null,
+        localAudioName: ''
+      },
+      reviewShowChunks: false,
+      streakJustLit: false,
+      adminEditingId: null
+    };
+
+    // Active media handles
+    let activeAudioEl = null;
+    let activeMediaRecorder = null;
+    let activeMediaStream = null;
+    let activeRecordedChunks = [];
+    let activeCountdownTimer = null;
+    let activeRecInterval = null;
+    let activeSimPlaybackInterval = null;
+    let splashInterval = null;
+
+    /*************************************************************************
+     * 4. CLEANUP, SEGMENTATION & UTILITY HELPERS
+     *************************************************************************/
+    function cleanupMedia() {
+      if (activeAudioEl) {
+        try {
+          activeAudioEl.pause();
+          activeAudioEl.ontimeupdate = null;
+          activeAudioEl.onended = null;
+          activeAudioEl.onerror = null;
+          activeAudioEl.onloadedmetadata = null;
+        } catch (e) {}
+        activeAudioEl = null;
+      }
+      if (activeCountdownTimer) { clearInterval(activeCountdownTimer); activeCountdownTimer = null; }
+      if (activeRecInterval) { clearInterval(activeRecInterval); activeRecInterval = null; }
+      if (activeSimPlaybackInterval) { clearInterval(activeSimPlaybackInterval); activeSimPlaybackInterval = null; }
+      if (activeMediaRecorder && activeMediaRecorder.state !== 'inactive') {
+        try { activeMediaRecorder.stop(); } catch (e) {}
+      }
+      activeMediaRecorder = null;
+      if (activeMediaStream) {
+        try { activeMediaStream.getTracks().forEach(t => t.stop()); } catch (e) {}
+        activeMediaStream = null;
+      }
+    }
+
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function getSelectedExercise() {
+      return state.exercises.find(ex => ex.id === state.selectedExerciseId) || null;
+    }
+
+    /**
+     * Groups sentences into 2-3 (Practice) or 3-4 (Challenge) per turn
+     * and computes proportional start/end time ratios based on word counts.
+     */
+    function buildSegments(sentences, mode) {
+      const list = Array.isArray(sentences) ? sentences : [];
+      if (list.length === 0) return [];
+      const groups = [];
+      if (mode === 'CHALLENGE') {
+        if (list.length <= 4) {
+          groups.push(list);
+        } else {
+          let i = 0;
+          while (i < list.length) {
+            const rem = list.length - i;
+            if (rem <= 4) { groups.push(list.slice(i)); break; }
+            else if (rem === 5) { groups.push(list.slice(i, i + 3)); groups.push(list.slice(i + 3)); break; }
+            else { groups.push(list.slice(i, i + 3)); i += 3; }
+          }
+        }
+      } else {
+        if (list.length <= 3) {
+          groups.push(list);
+        } else {
+          let i = 0;
+          while (i < list.length) {
+            const rem = list.length - i;
+            if (rem <= 3) { groups.push(list.slice(i)); break; }
+            else { groups.push(list.slice(i, i + 2)); i += 2; }
+          }
+        }
+      }
+
+      const wordCounts = groups.map(grp =>
+        grp.reduce((sum, s) => sum + stripChunks(s).split(/\s+/).filter(Boolean).length, 0)
+      );
+      const totalWords = Math.max(1, wordCounts.reduce((a, b) => a + b, 0));
+
+      let acc = 0;
+      return groups.map((grp, idx) => {
+        const startRatio = acc / totalWords;
+        acc += wordCounts[idx];
+        const endRatio = acc / totalWords;
+        return { sentences: grp, startRatio, endRatio };
+      });
+    }
+
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const el = document.createElement('div');
+      const colors = {
+        info: 'bg-slate-900 text-white',
+        success: 'bg-[#58CC02] text-white border-b-2 border-[#46A302]',
+        warning: 'bg-[#FF9600] text-white',
+        error: 'bg-rose-600 text-white'
+      };
+      el.className = `pointer-events-auto px-4 py-3 rounded-2xl shadow-lg text-sm font-semibold flex items-center gap-2 animate-view ${colors[type] || colors.info}`;
+      el.innerHTML = `<span>${escapeHtml(message)}</span>`;
+      container.appendChild(el);
+      setTimeout(() => {
+        el.style.opacity = '0';
+        el.style.transition = 'opacity 0.3s ease';
+        setTimeout(() => el.remove(), 320);
+      }, 3000);
+    }
+
+    function openModal({ title, body, actions }) {
+      document.getElementById('modal-title').textContent = title;
+      document.getElementById('modal-body').innerHTML = body;
+      const actionsEl = document.getElementById('modal-actions');
+      actionsEl.innerHTML = '';
+      actions.forEach(act => {
+        const btn = document.createElement('button');
+        btn.className = act.className || 'px-4 py-2 rounded-2xl text-sm font-bold bg-slate-100 text-slate-700 hover:bg-slate-200';
+        btn.textContent = act.label;
+        btn.onclick = () => { closeModal(); if (act.onClick) act.onClick(); };
+        actionsEl.appendChild(btn);
+      });
+      const modal = document.getElementById('custom-modal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('custom-modal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function showStreakInfo() {
+      openModal({
+        title: '🔥 Your Interpreting Streak',
+        body: `
+          <div class="flex items-center gap-4 mb-4 p-3.5 rounded-2xl bg-[#EEFFDB] border border-[#D7FFB8]">
+            <div class="shrink-0">${getMascotSVG(60)}</div>
+            <div class="text-sm text-slate-800">
+              Current streak: <strong class="text-[#FF9600] text-base">${state.streak.streakCount}</strong> • Total completed sessions: <strong>${state.streak.totalSessions}</strong> (${state.streak.completedIds.length}/${state.exercises.length} unique exercises).
+            </div>
+          </div>
+          <p>Every time you finish an exercise and reach the <strong>[REVIEW]</strong> screen, your streak flame automatically lights up by <strong>+1 🔥</strong>!</p>
+        `,
+        actions: [{ label: 'Keep Going!', className: 'btn-3d-green px-5 py-2.5 rounded-2xl text-sm font-extrabold' }]
+      });
+    }
+
+    /*************************************************************************
+     * 5. SPLASH SCREEN & NAVIGATION
+     *************************************************************************/
+    function initSplash() {
+      document.getElementById('splash-mascot').innerHTML = getMascotSVG(96);
+      const slogan = MOTIVATIONAL_SLOGANS[Math.floor(Math.random() * MOTIVATIONAL_SLOGANS.length)];
+      document.getElementById('splash-slogan').textContent = slogan;
+
+      let pct = 0;
+      const bar = document.getElementById('splash-bar');
+      const pctText = document.getElementById('splash-percent');
+
+      splashInterval = setInterval(() => {
+        pct += 4;
+        if (pct >= 100) {
+          pct = 100;
+          bar.style.width = '100%';
+          pctText.textContent = '100%';
+          clearInterval(splashInterval);
+          setTimeout(dismissSplash, 260);
+        } else {
+          bar.style.width = pct + '%';
+          pctText.textContent = pct + '%';
+        }
+      }, 65);
+    }
+
+    function dismissSplash() {
+      if (splashInterval) { clearInterval(splashInterval); splashInterval = null; }
+      const splash = document.getElementById('splash-screen');
+      if (!splash) return;
+      splash.style.opacity = '0';
+      setTimeout(() => splash.classList.add('hidden'), 450);
+    }
+
+    function updateNavbar() {
+      const isChallenge = state.mode === 'CHALLENGE';
+      document.documentElement.style.setProperty('--accent', isChallenge ? '#FF2B2B' : '#2B75FF');
+      document.getElementById('nav-streak-count').textContent = state.streak.streakCount;
+
+      const modePill = document.getElementById('nav-mode-pill');
+      const modeDot = document.getElementById('nav-mode-dot');
+      const modeText = document.getElementById('nav-mode-text');
+      if (isChallenge) {
+        modePill.className = 'hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-red-50 text-[#FF2B2B] border-2 border-red-200 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer';
+        modeDot.style.backgroundColor = '#FF2B2B';
+        modeText.textContent = 'CHALLENGE';
+      } else {
+        modePill.className = 'hidden md:flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-extrabold bg-blue-50 text-[#2B75FF] border-2 border-blue-200 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer';
+        modeDot.style.backgroundColor = '#2B75FF';
+        modeText.textContent = 'PRACTICE';
+      }
+
+      const tabHub = document.getElementById('tab-hub');
+      const tabAdmin = document.getElementById('tab-admin');
+      const isAdmin = state.view === 'admin';
+      if (tabHub && tabAdmin) {
+        tabHub.className = isAdmin
+          ? 'px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all text-slate-600 hover:text-slate-900'
+          : 'px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all bg-[#58CC02] text-white shadow-sm';
+        tabAdmin.className = isAdmin
+          ? 'px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all bg-[#58CC02] text-white shadow-sm'
+          : 'px-4 py-1.5 rounded-xl text-xs font-extrabold transition-all text-slate-600 hover:text-slate-900';
+      }
+
+      const adminLabel = document.getElementById('nav-admin-label');
+      if (adminLabel) adminLabel.textContent = isAdmin ? 'Hub' : 'Admin';
+    }
+
+    function navigate(view, options = {}) {
+      cleanupMedia();
+      state.view = view;
+      if (options.exerciseId !== undefined) state.selectedExerciseId = options.exerciseId;
+      if (view === 'admin') state.adminEditingId = null;
+      if (view === 'interpret') {
+        const ex = getSelectedExercise();
+        if (!ex) { state.view = 'home'; render(); return; }
+        state.interpret = {
+          segments: buildSegments(ex.sentences, state.mode),
+          currentIndex: 0,
+          phase: 'IDLE',
+          countdownVal: 2,
+          recSeconds: 0,
+          micSimulated: false,
+          recordings: [],
+          showHelper: false,
+          showChunking: false,
+          playbackProgress: 0,
+          audioError: false,
+          showEmbedPlayer: false,
+          localAudioUrl: null,
+          localAudioName: ''
+        };
+      }
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      render();
+    }
+
+    function toggleAdminView() { navigate(state.view === 'admin' ? 'home' : 'admin'); }
+
+    function toggleMode() {
+      state.mode = state.mode === 'PRACTICE' ? 'CHALLENGE' : 'PRACTICE';
+      if (state.mode === 'CHALLENGE') state.params.speed = 1.0;
+      render();
+    }
+
+    function render() {
+      updateNavbar();
+      const root = document.getElementById('app-root');
+      switch (state.view) {
+        case 'home':      root.innerHTML = renderHomeView(); break;
+        case 'params':    root.innerHTML = renderParamsView(); break;
+        case 'glossary':  root.innerHTML = renderGlossaryView(); break;
+        case 'interpret': root.innerHTML = renderInterpretView(); break;
+        case 'review':    root.innerHTML = renderReviewView(); triggerReviewConfetti(); break;
+        case 'admin':     root.innerHTML = renderAdminView(); break;
+        default:          root.innerHTML = renderHomeView();
+      }
+    }
+
+    /*************************************************************************
+     * 6. VIEW 1: HOME PAGE (PRACTICE HUB)
+     *************************************************************************/
+    function renderHomeView() {
+      const isChallenge = state.mode === 'CHALLENGE';
+
+      const filtered = state.exercises.filter(ex => {
+        const modeOk = ex.mode === 'BOTH' || ex.mode === state.mode;
+        const levelOk = state.filters.level === 'ALL' || String(ex.level) === String(state.filters.level);
+        const tagOk = state.filters.tag === 'ALL' || ex.tag === state.filters.tag;
+        const q = state.filters.search.trim().toLowerCase();
+        const searchOk = !q ||
+          ex.title.toLowerCase().includes(q) ||
+          ex.summary.toLowerCase().includes(q) ||
+          ex.tag.toLowerCase().includes(q);
+        return modeOk && levelOk && tagOk && searchOk;
+      });
+
+      const cardsHtml = filtered.length === 0
+        ? `
+          <div class="col-span-full bg-white rounded-[28px] border-2 border-[#E5E7EB] p-12 text-center shadow-card">
+            <div class="text-4xl mb-3">🌱</div>
+            <h3 class="font-display text-lg font-extrabold text-slate-800 mb-1">No matching exercises found</h3>
+            <p class="text-sm text-slate-500 mb-4">Try adjusting your level, topic tag, or search keywords.</p>
+            <button onclick="resetFilters()" class="btn-3d-green px-5 py-2.5 rounded-2xl text-sm font-extrabold">Clear Filters</button>
+          </div>
+        `
+        : filtered.map(ex => {
+            const lv = getLevelStyle(ex.level, state.mode);
+            const tg = getTagStyle(ex.tag);
+            const isDone = state.streak.completedIds.includes(ex.id);
+            const hasDriveAudio = Boolean(ex.driveFileId && ex.driveFileId.trim());
+
+            return `
+              <article onclick="openExercise('${escapeHtml(ex.id)}')" class="duo-card ${isChallenge ? 'challenge-card' : ''} group cursor-pointer bg-white rounded-[26px] shadow-card hover:shadow-cardHover hover:-translate-y-1 overflow-hidden flex flex-col">
+                <!-- Flat SVG Thumbnail -->
+                <div class="relative h-44 w-full overflow-hidden bg-[#EEFFDB]">
+                  <div class="w-full h-full group-hover:scale-105 transition-transform duration-500">
+                    ${getExerciseIllustrationSVG(ex.id)}
+                  </div>
+
+                  <!-- Top Left: Level Badge -->
+                  <div class="absolute top-3 left-3">
+                    <span class="px-3 py-1 rounded-full text-xs font-extrabold shadow-sm tracking-tight" style="background-color: ${lv.bg}; color: ${lv.text};">
+                      ${lv.label}
+                    </span>
+                  </div>
+
+                  <!-- Top Right: Done or Audio Ready -->
+                  <div class="absolute top-3 right-3 flex items-center gap-1.5">
+                    ${hasDriveAudio ? `
+                      <span class="px-2.5 py-1 rounded-full bg-white/95 text-[#46A302] text-[11px] font-extrabold shadow-sm border border-[#D7FFB8]">
+                        🎧 MP3 Ready
+                      </span>
+                    ` : ''}
+                    ${isDone ? `
+                      <span class="px-2.5 py-1 rounded-full bg-[#58CC02] border-b-2 border-[#46A302] text-white text-[11px] font-extrabold flex items-center gap-1 shadow-sm">
+                        ✓ Done
+                      </span>
+                    ` : ''}
+                  </div>
+
+                  <!-- Bottom Left: Topic Tag Badge -->
+                  <div class="absolute bottom-3 left-3">
+                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold border shadow-sm" style="background-color: ${tg.bg}; color: ${tg.text}; border-color: ${tg.border};">
+                      <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${tg.dot}"></span>
+                      ${escapeHtml(ex.tag)}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Card Body -->
+                <div class="p-5 flex-1 flex flex-col">
+                  <h3 class="font-display font-extrabold text-slate-900 text-base sm:text-lg leading-snug mb-2 ${isChallenge ? 'group-hover:text-[#FF2B2B]' : 'group-hover:text-[#58CC02]'} transition-colors line-clamp-2">
+                    ${escapeHtml(ex.title)}
+                  </h3>
+                  <p class="text-slate-500 text-sm leading-relaxed line-clamp-3 mb-4 flex-1">
+                    ${escapeHtml(ex.summary)}
+                  </p>
+
+                  <!-- Footer Meta -->
+                  <div class="pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-slate-500">
+                    <div class="flex items-center gap-3">
+                      <span class="inline-flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-[#58CC02]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" /></svg>
+                        ${ex.sentences.length} sentences
+                      </span>
+                      <span class="inline-flex items-center gap-1">
+                        <svg class="w-3.5 h-3.5 text-[#58CC02]" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25" /></svg>
+                        ${ex.glossary.length} words
+                      </span>
+                    </div>
+                    <span class="inline-flex items-center gap-1 font-extrabold transition-transform group-hover:translate-x-1" style="color: ${isChallenge ? '#FF2B2B' : '#58CC02'}">
+                      ${isChallenge ? 'Start Challenge' : 'Practice Now'}
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" /></svg>
+                    </span>
+                  </div>
+                </div>
+              </article>
+            `;
+          }).join('');
+
+      return `
+        <div class="animate-view space-y-7">
+          <!-- HERO & MODE SWITCHER -->
+          <section class="hero-green ${isChallenge ? 'is-challenge' : ''} rounded-[32px] p-6 sm:p-8 lg:p-10 text-white shadow-lg relative overflow-hidden border-b-4 ${isChallenge ? 'border-red-800' : 'border-[#46A302]'}">
+            <div class="absolute -top-16 -right-16 w-64 h-64 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+            <div class="absolute -bottom-20 -left-16 w-56 h-56 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+
+            <div class="relative flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+              <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5 max-w-2xl">
+                <div class="mascot-float bg-white/15 backdrop-blur-sm p-2.5 rounded-3xl border border-white/25 shrink-0">
+                  ${getMascotSVG(84)}
+                </div>
+                <div>
+                  <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/20 backdrop-blur-sm text-xs font-extrabold tracking-wider uppercase mb-2.5">
+                    <span>${isChallenge ? '⚡ Challenge Mode' : '🌱 Practice Mode'}</span>
+                  </div>
+                  <h1 class="font-display text-2xl sm:text-3xl font-black tracking-tight mb-2">
+                    ${isChallenge
+                      ? 'Master Real-Speed Consecutive Interpreting'
+                      : 'Build Interpreting Fluency with KONJACLATE'}
+                  </h1>
+                  <p class="text-white/95 text-sm sm:text-base leading-relaxed">
+                    ${isChallenge
+                      ? 'Playback speed is locked at <strong>1.0x</strong> with longer <strong>3–4 sentence</strong> segments and no chunking hints. Complete each exercise to ignite your streak 🔥!'
+                      : 'Adjust speed from <strong>0.5x to 1.5x</strong>, listen to real MP3 audio in <strong>2–3 sentence</strong> segments, study the Glossary, and toggle Chunking hints.'}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Circular Gradient Mode Toggle Switch -->
+              <div class="bg-white rounded-[26px] p-5 text-slate-900 shadow-xl shrink-0 min-w-[270px] border-2 border-white/60">
+                <div class="text-[11px] font-extrabold uppercase tracking-wider text-slate-400 mb-3 text-center">Switch Mode</div>
+                <div class="flex items-center justify-center gap-4">
+                  <button onclick="setMode('PRACTICE')" class="text-sm font-black transition-colors ${!isChallenge ? 'text-[#2B75FF]' : 'text-slate-400 hover:text-slate-600'}">
+                    PRACTICE
+                  </button>
+
+                  <button
+                    onclick="toggleMode()"
+                    role="switch"
+                    aria-checked="${isChallenge}"
+                    aria-label="Toggle between Practice and Challenge mode"
+                    class="mode-track ${isChallenge ? 'is-challenge' : ''} relative w-[76px] h-[40px] rounded-full p-1 cursor-pointer focus:outline-none focus:ring-4 ${isChallenge ? 'focus:ring-red-200 shadow-glowRed' : 'focus:ring-blue-200 shadow-glowBlue'}"
+                  >
+                    <span class="mode-knob block w-8 h-8 rounded-full bg-white shadow-md flex items-center justify-center text-sm">
+                      ${isChallenge ? '🔥' : '📘'}
+                    </span>
+                  </button>
+
+                  <button onclick="setMode('CHALLENGE')" class="text-sm font-black transition-colors ${isChallenge ? 'text-[#FF2B2B]' : 'text-slate-400 hover:text-slate-600'}">
+                    CHALLENGE
+                  </button>
+                </div>
+                <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+                  <span>Completed</span>
+                  <span class="font-extrabold text-[#46A302]">${state.streak.completedIds.length} / ${state.exercises.length} exercises</span>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- FILTER BAR -->
+          <section class="bg-white rounded-[26px] p-4 sm:p-5 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card space-y-4">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+              <!-- Level Filter -->
+              <div class="flex flex-wrap items-center gap-2">
+                <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mr-1">Level:</span>
+                ${['ALL', '1', '2', '3'].map(lvKey => {
+                  const active = String(state.filters.level) === lvKey;
+                  const label = lvKey === 'ALL' ? 'All Levels' : `Level ${lvKey}`;
+                  let styleStr = '';
+                  if (active) {
+                    if (lvKey === 'ALL') {
+                      styleStr = `background:#58CC02; color:#fff; border-color:#46A302;`;
+                    } else {
+                      const lvSt = getLevelStyle(lvKey, state.mode);
+                      styleStr = `background:${lvSt.bg}; color:${lvSt.text}; border-color:transparent;`;
+                    }
+                  }
+                  return `
+                    <button onclick="setLevelFilter('${lvKey}')" style="${styleStr}" class="px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-bold border-2 transition-all ${active ? 'shadow-sm' : 'bg-[#F6FDF2] text-slate-600 border-[#E5E7EB] hover:bg-[#EEFFDB]'}">
+                      ${label}
+                    </button>
+                  `;
+                }).join('')}
+              </div>
+
+              <!-- Search Input -->
+              <div class="relative w-full md:w-72">
+                <svg class="w-4 h-4 text-[#58CC02] absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2.4" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                </svg>
+                <input
+                  type="text"
+                  value="${escapeHtml(state.filters.search)}"
+                  oninput="setSearchFilter(this.value)"
+                  placeholder="Search title, topic..."
+                  class="w-full pl-10 pr-4 py-2 rounded-2xl bg-[#F6FDF2] border-2 border-[#E5E7EB] text-sm focus:outline-none focus:bg-white focus:border-[#58CC02] transition-colors"
+                />
+              </div>
+            </div>
+
+            <!-- Topic Tags Filter -->
+            <div class="flex flex-wrap items-center gap-2 pt-3 border-t border-slate-100">
+              <span class="text-xs font-extrabold uppercase tracking-wider text-slate-400 mr-1">Topic:</span>
+              <button onclick="setTagFilter('ALL')" class="px-3 py-1 rounded-full text-xs font-bold border-2 transition-all ${state.filters.tag === 'ALL' ? 'bg-slate-900 text-white border-slate-900' : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-50'}">
+                All Topics
+              </button>
+              ${AVAILABLE_TAGS.map(tag => {
+                const tg = getTagStyle(tag);
+                const active = state.filters.tag === tag;
+                return `
+                  <button onclick="setTagFilter('${escapeHtml(tag)}')" style="${active ? `background:${tg.dot}; color:#fff; border-color:${tg.dot};` : `background:${tg.bg}; color:${tg.text}; border-color:${tg.border};`}" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border transition-all hover:opacity-90">
+                    <span class="w-1.5 h-1.5 rounded-full" style="background:${active ? '#fff' : tg.dot}"></span>
+                    ${escapeHtml(tag)}
+                  </button>
+                `;
+              }).join('')}
+            </div>
+          </section>
+
+          <!-- EXERCISE CARDS GRID -->
+          <section>
+            <div class="flex items-center justify-between mb-4">
+              <h2 class="font-display text-xl font-black text-slate-900">
+                Interpreting Exercises <span class="text-[#58CC02] font-extrabold text-base">(${filtered.length})</span>
+              </h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              ${cardsHtml}
+            </div>
+          </section>
+        </div>
+      `;
+    }
+
+    function setMode(m) { if (state.mode !== m) toggleMode(); }
+    function setLevelFilter(lv) { state.filters.level = lv; render(); }
+    function setTagFilter(tg) { state.filters.tag = tg; render(); }
+    function setSearchFilter(val) {
+      state.filters.search = val;
+      const activeEl = document.activeElement;
+      const pos = activeEl ? activeEl.selectionStart : 0;
+      render();
+      const input = document.querySelector('input[placeholder="Search title, topic..."]');
+      if (input) { input.focus(); input.setSelectionRange(pos, pos); }
+    }
+    function resetFilters() { state.filters = { level: 'ALL', tag: 'ALL', search: '' }; render(); }
+    function openExercise(id) {
+      if (state.mode === 'CHALLENGE') state.params.speed = 1.0;
+      navigate('params', { exerciseId: id });
+    }
+
+    /*************************************************************************
+     * 7. VIEW 2: SETUP / PARAMETERS PAGE (NO AI VOICE OPTION)
+     *************************************************************************/
+    function renderParamsView() {
+      const ex = getSelectedExercise();
+      if (!ex) return renderHomeView();
+
+      const isChallenge = state.mode === 'CHALLENGE';
+      const lv = getLevelStyle(ex.level, state.mode);
+      const tg = getTagStyle(ex.tag);
+      const segCount = buildSegments(ex.sentences, state.mode).length;
+
+      return `
+        <div class="animate-view max-w-3xl mx-auto space-y-6">
+          <!-- Step Breadcrumb -->
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <button onclick="navigate('home')" class="inline-flex items-center gap-1.5 text-sm font-bold text-[#46A302] hover:text-[#58CC02]">
+              ← Back to Practice Hub
+            </button>
+            <div class="flex items-center gap-2 text-xs font-extrabold">
+              <span class="px-3 py-1 rounded-full bg-[#58CC02] text-white">1. Setup</span>
+              <span class="text-slate-300">→</span>
+              <span class="px-3 py-1 rounded-full bg-white text-slate-400 border border-[#E5E7EB]">2. Glossary</span>
+              <span class="text-slate-300">→</span>
+              <span class="px-3 py-1 rounded-full bg-white text-slate-400 border border-[#E5E7EB]">3. Interpret</span>
+            </div>
+          </div>
+
+          <!-- Exercise Overview Card -->
+          <div class="bg-white rounded-[28px] p-6 sm:p-7 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card">
+            <div class="flex flex-wrap items-center gap-2 mb-3">
+              <span class="px-3 py-1 rounded-full text-xs font-extrabold" style="background:${lv.bg}; color:${lv.text};">${lv.label}</span>
+              <span class="px-3 py-1 rounded-full text-xs font-bold border" style="background:${tg.bg}; color:${tg.text}; border-color:${tg.border};">${escapeHtml(ex.tag)}</span>
+              <span class="px-3 py-1 rounded-full text-xs font-extrabold ${isChallenge ? 'bg-red-50 text-[#FF2B2B]' : 'bg-blue-50 text-[#2B75FF]'}">${state.mode} MODE</span>
+            </div>
+            <h1 class="font-display text-2xl sm:text-3xl font-black text-slate-900 mb-2">${escapeHtml(ex.title)}</h1>
+            <p class="text-slate-500 text-sm sm:text-base leading-relaxed">${escapeHtml(ex.summary)}</p>
+          </div>
+
+          <!-- Parameters Configuration Card -->
+          <div class="bg-white rounded-[28px] p-6 sm:p-7 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card space-y-6">
+            <div class="border-b border-slate-100 pb-4">
+              <h2 class="font-display text-lg font-extrabold text-slate-900">Session Parameters</h2>
+              <p class="text-xs text-slate-500 mt-0.5">
+                This exercise is divided into <strong>${segCount} interpreting ${segCount === 1 ? 'segment' : 'segments'}</strong> (${ex.sentences.length} sentences • ${ex.glossary.length} words).
+              </p>
+            </div>
+
+            ${isChallenge ? `
+              <div class="rounded-2xl bg-red-50 border-2 border-red-200 p-5 flex items-start gap-3.5">
+                <div class="w-10 h-10 rounded-xl bg-[#FF2B2B] text-white flex items-center justify-center shrink-0 text-lg shadow-sm">⚡</div>
+                <div>
+                  <h3 class="font-display font-extrabold text-[#B91C1C] text-base mb-1">Challenge Mode Rules</h3>
+                  <p class="text-sm text-red-800/90 leading-relaxed">
+                    Playback speed is <strong>locked at 1.0x</strong> and segment length increases to <strong>3–4 sentences</strong> per turn to sharpen your short-term memory and real-time reflexes.
+                  </p>
+                </div>
+              </div>
+            ` : `
+              <div class="rounded-2xl bg-[#EEFFDB] border-2 border-[#D7FFB8] p-4 flex items-start gap-3">
+                <div class="w-9 h-9 rounded-xl bg-[#58CC02] text-white flex items-center justify-center shrink-0 text-base">🌱</div>
+                <p class="text-sm text-[#2D6A00] leading-relaxed">
+                  <strong>Practice Mode:</strong> Audio automatically pauses every <strong>2–3 sentences</strong> so you can record your Vietnamese interpretation and self-monitor via auto-playback.
+                </p>
+              </div>
+
+              <!-- Playback Speed -->
+              <div>
+                <label class="block text-sm font-extrabold text-slate-800 mb-3">Playback Speed</label>
+                <div class="grid grid-cols-3 sm:grid-cols-5 gap-2.5">
+                  ${[0.5, 0.75, 1.0, 1.25, 1.5].map(spd => {
+                    const active = state.params.speed === spd;
+                    return `
+                      <button onclick="setParamSpeed(${spd})" class="py-3 px-3 rounded-2xl text-sm font-extrabold transition-all ${active ? 'btn-3d-blue' : 'btn-3d-white'}">
+                        ${spd.toFixed(spd === 1 || spd === 0.5 || spd === 1.5 ? 1 : 2)}x
+                        ${spd === 1.0 ? '<span class="block text-[10px] font-semibold opacity-80">Normal</span>' : ''}
+                      </button>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+
+              <!-- Recording Timer Limit -->
+              <div>
+                <label class="block text-sm font-extrabold text-slate-800 mb-3">Recording Timer Limit (Optional)</label>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+                  ${[
+                    { val: 0, label: 'No Limit' },
+                    { val: 15, label: '15 sec' },
+                    { val: 30, label: '30 sec' },
+                    { val: 45, label: '45 sec' }
+                  ].map(opt => {
+                    const active = state.params.timerLimit === opt.val;
+                    return `
+                      <button onclick="setParamTimer(${opt.val})" class="py-3 px-3 rounded-2xl text-sm font-extrabold transition-all ${active ? 'btn-3d-green' : 'btn-3d-white'}">
+                        ${opt.label}
+                      </button>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+            `}
+
+            <!-- Action Footer -->
+            <div class="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+              <button onclick="navigate('home')" class="w-full sm:w-auto btn-3d-white px-5 py-3 rounded-2xl text-sm font-bold">
+                ← Back
+              </button>
+              <button onclick="navigate('glossary')" class="w-full sm:w-auto ${isChallenge ? 'btn-3d-red' : 'btn-3d-green'} px-7 py-3.5 rounded-2xl text-sm font-extrabold flex items-center justify-center gap-2">
+                Continue to Glossary →
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function setParamSpeed(s) { state.params.speed = s; render(); }
+    function setParamTimer(t) { state.params.timerLimit = t; render(); }
+
+    /*************************************************************************
+     * 8. VIEW 3: GLOSSARY PAGE (BACKGROUND BRIEF + 4-COLUMN TABLE)
+     *************************************************************************/
+    function renderGlossaryView() {
+      const ex = getSelectedExercise();
+      if (!ex) return renderHomeView();
+
+      const isChallenge = state.mode === 'CHALLENGE';
+
+      const rowsHtml = ex.glossary.map((item, idx) => `
+        <tr class="border-b border-slate-100 last:border-0 hover:bg-[#F6FDF2] transition-colors">
+          <td class="py-3.5 px-4 text-xs font-extrabold text-[#46A302] text-center w-14">${idx + 1}</td>
+          <td class="py-3.5 px-4 text-sm font-extrabold text-slate-900">${escapeHtml(item.term)}</td>
+          <td class="py-3.5 px-4 text-sm font-medium text-slate-700">${escapeHtml(item.meaning)}</td>
+          <td class="py-3.5 px-4 text-xs text-slate-500">${escapeHtml(item.note || '—')}</td>
+        </tr>
+      `).join('');
+
+      return `
+        <div class="animate-view max-w-4xl mx-auto space-y-6">
+          <!-- Step Breadcrumb -->
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <button onclick="navigate('params')" class="inline-flex items-center gap-1.5 text-sm font-bold text-[#46A302] hover:text-[#58CC02]">
+              ← Back to Setup
+            </button>
+            <div class="flex items-center gap-2 text-xs font-extrabold">
+              <span class="px-3 py-1 rounded-full bg-[#EEFFDB] text-[#46A302]">✓ Setup</span>
+              <span class="text-slate-300">→</span>
+              <span class="px-3 py-1 rounded-full bg-[#58CC02] text-white">2. Glossary</span>
+              <span class="text-slate-300">→</span>
+              <span class="px-3 py-1 rounded-full bg-white text-slate-400 border border-[#E5E7EB]">3. Interpret</span>
+            </div>
+          </div>
+
+          <!-- SECTION 1: BACKGROUND KNOWLEDGE (APPEARS FIRST) -->
+          <section class="bg-white rounded-[28px] p-6 sm:p-7 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-2xl bg-[#58CC02] border-b-2 border-[#46A302] flex items-center justify-center text-white text-lg">💡</div>
+              <div>
+                <h2 class="font-display text-lg font-extrabold text-slate-900">Background Knowledge (Brief)</h2>
+                <p class="text-xs text-slate-500">Understanding context before listening drives 70–80% of interpreting accuracy.</p>
+              </div>
+            </div>
+            <div class="mt-4 p-5 rounded-2xl bg-[#F6FDF2] border-2 border-[#D7FFB8] text-slate-700 text-sm sm:text-base leading-relaxed">
+              ${escapeHtml(ex.brief)}
+            </div>
+          </section>
+
+          <!-- SECTION 2: KEY VOCABULARY 4-COLUMN TABLE -->
+          <section class="bg-white rounded-[28px] border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card overflow-hidden">
+            <div class="p-6 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100">
+              <div>
+                <h2 class="font-display text-lg font-extrabold text-slate-900">Key Vocabulary Table</h2>
+                <p class="text-xs text-slate-500 mt-0.5">${ex.glossary.length} words prepared for <strong>${escapeHtml(ex.title)}</strong></p>
+              </div>
+              <span class="self-start sm:self-auto px-3 py-1 rounded-full bg-[#EEFFDB] text-[#46A302] text-xs font-extrabold border border-[#D7FFB8]">EN → VI Glossary</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-[#F6FDF2] border-b border-[#D7FFB8] text-[11px] font-extrabold uppercase tracking-wider text-[#46A302]">
+                    <th class="py-3.5 px-4 text-center w-14">No.</th>
+                    <th class="py-3.5 px-4">Term / Phrase</th>
+                    <th class="py-3.5 px-4">Vietnamese Equivalent</th>
+                    <th class="py-3.5 px-4">Notes</th>
+                  </tr>
+                </thead>
+                <tbody>${rowsHtml}</tbody>
+              </table>
+            </div>
+          </section>
+
+          <!-- START CTA -->
+          <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+            <button onclick="navigate('params')" class="w-full sm:w-auto btn-3d-white px-5 py-3.5 rounded-2xl text-sm font-bold">
+              ← Adjust Setup
+            </button>
+            <button onclick="navigate('interpret')" class="w-full sm:w-auto ${isChallenge ? 'btn-3d-red' : 'btn-3d-green'} px-10 py-4 rounded-2xl text-base font-black tracking-wide flex items-center justify-center gap-2.5">
+              <span>START INTERPRETING</span>
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    /*************************************************************************
+     * 9. VIEW 4: INTERPRETING WORKSPACE ([INTERPRET] — ORIGINAL MP3 ENGINE)
+     *************************************************************************/
+    function renderInterpretView() {
+      const ex = getSelectedExercise();
+      if (!ex) return renderHomeView();
+
+      const isChallenge = state.mode === 'CHALLENGE';
+      const accent = isChallenge ? '#FF2B2B' : '#58CC02';
+      const lv = getLevelStyle(ex.level, state.mode);
+      const {
+        segments, currentIndex, phase, countdownVal, recSeconds,
+        showHelper, showChunking, micSimulated, playbackProgress,
+        audioError, showEmbedPlayer, localAudioName
+      } = state.interpret;
+
+      const totalSegs = segments.length;
+      const currentSeg = segments[currentIndex] || { sentences: [] };
+      const progressPct = Math.round((currentIndex / Math.max(1, totalSegs)) * 100);
+      const activeSpeed = isChallenge ? 1.0 : state.params.speed;
+      const sourceLabel = localAudioName
+        ? `Local MP3 (${localAudioName})`
+        : 'Original Audio (MP3)';
+
+      let stageHtml = '';
+      if (phase === 'IDLE') {
+        stageHtml = `
+          <div class="flex flex-col items-center text-center py-6">
+            <p class="text-sm font-semibold text-slate-500 mb-6">
+              Press <strong>PLAY</strong> to listen to Segment ${currentIndex + 1} (${currentSeg.sentences.length} sentences) • Speed <strong>${activeSpeed}x</strong> • <strong>${escapeHtml(sourceLabel)}</strong>
+            </p>
+            <button onclick="startSegmentPlayback()" class="${isChallenge ? 'btn-3d-red' : 'btn-3d-green'} group w-28 h-28 rounded-full flex items-center justify-center shadow-xl hover:scale-105 cursor-pointer" aria-label="Play audio segment">
+              <svg class="w-12 h-12 ml-1.5 group-hover:scale-110 transition-transform" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            </button>
+            <span class="mt-4 text-xs font-extrabold uppercase tracking-widest text-slate-400">PLAY AUDIO</span>
+          </div>
+        `;
+      } else if (phase === 'PLAYING') {
+        stageHtml = `
+          <div class="flex flex-col items-center text-center py-6">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-extrabold mb-6" style="background:${isChallenge ? '#FEF2F2' : '#EEFFDB'}; color:${isChallenge ? '#DC2626' : '#46A302'};">
+              <span class="w-2 h-2 rounded-full animate-ping" style="background:${accent}"></span>
+              Playing Segment ${currentIndex + 1}/${totalSegs}... Listen carefully & take mental notes!
+            </div>
+
+            <div class="wave-active flex items-center justify-center gap-1.5 h-24 w-full max-w-md mb-6 px-4">
+              ${Array.from({ length: 24 }).map(() => `<div class="wave-bar w-2 rounded-full" style="background:${accent}"></div>`).join('')}
+            </div>
+
+            <button onclick="skipToCountdown()" class="text-xs font-bold text-slate-400 hover:text-slate-700 underline underline-offset-4">
+              Skip Audio → Start Countdown Now
+            </button>
+          </div>
+        `;
+      } else if (phase === 'COUNTDOWN') {
+        stageHtml = `
+          <div class="flex flex-col items-center text-center py-6">
+            <p class="text-sm font-bold text-slate-600 mb-5">Get ready to interpret! Recording starts in...</p>
+            <div class="relative w-28 h-28 rounded-full flex items-center justify-center border-4" style="border-color:${accent}; background:${isChallenge ? '#FFF1F2' : '#EEFFDB'}">
+              <span id="countdown-number" class="font-display text-5xl font-black" style="color:${accent}">${countdownVal}</span>
+            </div>
+            <p class="text-xs text-slate-400 mt-4">Take a breath and deliver your Vietnamese interpretation clearly</p>
+          </div>
+        `;
+      } else if (phase === 'RECORDING') {
+        const limit = (!isChallenge && state.params.timerLimit > 0) ? state.params.timerLimit : 0;
+        const timeStr = limit > 0
+          ? `Time left: ${Math.max(0, limit - recSeconds)}s`
+          : `Recording: ${formatDuration(recSeconds)}`;
+        stageHtml = `
+          <div class="flex flex-col items-center text-center py-6">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 text-[#FF2B2B] text-xs font-extrabold mb-5">
+              <span class="w-2.5 h-2.5 rounded-full bg-[#FF2B2B] animate-pulse"></span>
+              RECORDING INTERPRETATION
+            </div>
+
+            <div class="rec-pulse w-24 h-24 rounded-full bg-[#FF2B2B] text-white flex items-center justify-center mb-4">
+              <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z" />
+              </svg>
+            </div>
+
+            <div id="rec-timer-text" class="font-display text-2xl font-black text-slate-900 mb-2">${timeStr}</div>
+            ${micSimulated
+              ? `<p class="text-xs text-amber-700 bg-amber-50 px-3 py-1 rounded-full mb-4 font-semibold">Simulated timer mode (Microphone permission unavailable)</p>`
+              : `<p class="text-xs text-slate-400 mb-5">Speak your Vietnamese interpretation naturally</p>`}
+
+            <button onclick="stopRecording()" class="px-8 py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 border-b-4 border-slate-700 text-white font-extrabold text-sm shadow-lg transition-all flex items-center gap-2">
+              <span class="w-3 h-3 rounded-sm bg-red-500"></span>
+              Stop Recording
+            </button>
+          </div>
+        `;
+      } else if (phase === 'PLAYBACK') {
+        const isLast = currentIndex >= totalSegs - 1;
+        stageHtml = `
+          <div class="flex flex-col items-center text-center py-6">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EEFFDB] text-[#46A302] text-xs font-extrabold mb-5">
+              <svg class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path></svg>
+              Playing back your recording for self-monitoring...
+            </div>
+
+            <div class="w-full max-w-md bg-[#F6FDF2] border-2 border-[#D7FFB8] rounded-2xl p-4 mb-6">
+              <div class="flex justify-between text-xs font-bold text-slate-500 mb-2">
+                <span>Your Recording — Segment ${currentIndex + 1}</span>
+                <span id="playback-pct-label">${Math.round(playbackProgress)}%</span>
+              </div>
+              <div class="w-full h-2.5 bg-[#EEFFDB] rounded-full overflow-hidden">
+                <div id="playback-bar-fill" class="h-full rounded-full bg-[#58CC02] transition-all duration-150" style="width:${playbackProgress}%"></div>
+              </div>
+            </div>
+
+            <button onclick="proceedNextSegment()" class="${isChallenge ? 'btn-3d-red' : 'btn-3d-green'} px-7 py-3 rounded-2xl font-extrabold text-sm">
+              ${isLast ? 'Finish & View Review →' : 'Next Segment →'}
+            </button>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="animate-view max-w-4xl mx-auto space-y-6">
+          <!-- Top Bar -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <button onclick="confirmExitInterpret()" class="inline-flex items-center gap-1.5 text-sm font-bold text-slate-500 hover:text-slate-900">
+              ✕ Exit Session
+            </button>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="px-3 py-1 rounded-full text-xs font-extrabold" style="background:${lv.bg}; color:${lv.text};">${lv.label}</span>
+              <span class="px-3 py-1 rounded-full text-xs font-extrabold ${isChallenge ? 'bg-red-50 text-[#FF2B2B]' : 'bg-blue-50 text-[#2B75FF]'}">${state.mode}</span>
+              <button onclick="toggleChunkingHint()" class="px-3.5 py-1.5 rounded-full text-xs font-extrabold border-2 transition-colors ${showChunking ? 'bg-[#58CC02] text-white border-[#46A302]' : 'bg-white text-[#46A302] border-[#D7FFB8] hover:bg-[#EEFFDB]'}">
+                ${showChunking ? 'Hide Chunking Guide (/)' : '✂️ Chunking Guide (/)'}
+              </button>
+              ${!isChallenge ? `
+                <button onclick="toggleInterpretHelper()" class="px-3.5 py-1.5 rounded-full text-xs font-extrabold border-2 transition-colors ${showHelper ? 'bg-[#2B75FF] text-white border-[#2B75FF]' : 'bg-white text-slate-700 border-slate-200 hover:bg-slate-50'}">
+                  ${showHelper ? 'Hide Glossary' : '📖 Glossary'}
+                </button>
+              ` : ''}
+            </div>
+          </div>
+
+          <!-- Progress Card -->
+          <div class="bg-white rounded-[26px] p-5 sm:p-6 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+              <h1 class="font-display text-lg sm:text-xl font-black text-slate-900">${escapeHtml(ex.title)}</h1>
+              <span class="text-sm font-black" style="color:${accent}">Segment ${currentIndex + 1} / ${totalSegs}</span>
+            </div>
+            <div class="w-full h-3 bg-[#EEFFDB] rounded-full overflow-hidden">
+              <div class="h-full rounded-full transition-all duration-500" style="width:${Math.max(10, progressPct)}%; background:${accent}"></div>
+            </div>
+          </div>
+
+          <!-- SEAMLESS AUDIO FALLBACK BANNER (IF GOOGLE DRIVE STREAMING IS BLOCKED) -->
+          ${audioError ? `
+            <div class="bg-amber-50 border-2 border-amber-200 rounded-[24px] p-4 sm:p-5 flex flex-col gap-3 animate-view">
+              <div class="flex items-start gap-3">
+                <span class="text-xl leading-none">⚠️</span>
+                <div class="text-xs sm:text-sm text-amber-900 leading-relaxed">
+                  <strong>Direct Google Drive streaming was blocked by your browser or iframe policy.</strong> Use the Embedded Drive Player below or load a local MP3 file from your device:
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-2">
+                ${ex.driveFileId ? `
+                  <button onclick="toggleEmbedDrivePlayer()" class="btn-3d-white px-4 py-2 rounded-xl text-xs font-extrabold">
+                    ${showEmbedPlayer ? 'Hide Embedded Drive Player' : '▶️ Open Embedded Drive Player'}
+                  </button>
+                ` : ''}
+                <label class="cursor-pointer btn-3d-white px-4 py-2 rounded-xl text-xs font-extrabold inline-flex items-center gap-1.5">
+                  📂 Load Local MP3 File
+                  <input type="file" accept="audio/*" onchange="handleLocalAudioUpload(event)" class="hidden" />
+                </label>
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- COLLAPSIBLE EMBEDDED GOOGLE DRIVE PLAYER -->
+          ${(showEmbedPlayer && ex.driveFileId) ? `
+            <div class="bg-white rounded-[24px] p-4 border-2 border-[#E5E7EB] shadow-card animate-view space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-extrabold text-slate-700">🎧 Embedded Google Drive Audio Player</span>
+                <button onclick="toggleEmbedDrivePlayer()" class="text-xs font-bold text-slate-400 hover:text-slate-700">Close</button>
+              </div>
+              <iframe src="https://drive.google.com/file/d/${escapeHtml(ex.driveFileId)}/preview" class="w-full h-24 rounded-xl border border-slate-200" allow="autoplay"></iframe>
+            </div>
+          ` : ''}
+
+          <!-- MAIN INTERPRETATION STAGE -->
+          <div class="bg-white rounded-[30px] p-6 sm:p-10 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card">
+            <!-- 4-Step Loop Tracker -->
+            <div class="grid grid-cols-4 gap-2 mb-8 text-center">
+              ${[
+                { id: 'PLAYING', label: '1. Listen' },
+                { id: 'COUNTDOWN', label: '2. Countdown (2s)' },
+                { id: 'RECORDING', label: '3. Record' },
+                { id: 'PLAYBACK', label: '4. Playback' }
+              ].map((step, i) => {
+                const order = { IDLE: -1, PLAYING: 0, COUNTDOWN: 1, RECORDING: 2, PLAYBACK: 3 };
+                const cur = order[phase] ?? -1;
+                const active = cur === i;
+                const done = cur > i;
+                return `
+                  <div class="py-2 px-2 rounded-xl text-[11px] sm:text-xs font-extrabold transition-all ${active ? 'text-white shadow-sm' : done ? 'bg-[#EEFFDB] text-[#46A302]' : 'bg-slate-50 text-slate-400'}" style="${active ? `background:${accent}` : ''}">
+                    ${done ? '✓ ' : ''}${step.label}
+                  </div>
+                `;
+              }).join('')}
+            </div>
+
+            ${stageHtml}
+
+            <!-- Utility Bar for Audio Options -->
+            <div class="mt-6 pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+              <span>Audio: <strong class="text-slate-700">${escapeHtml(sourceLabel)}</strong></span>
+              <div class="flex flex-wrap items-center gap-3">
+                ${ex.driveFileId ? `
+                  <button onclick="toggleEmbedDrivePlayer()" class="font-bold text-slate-500 hover:text-slate-800 hover:underline">
+                    ${showEmbedPlayer ? 'Hide Drive Embed' : 'Drive Embed Player'}
+                  </button>
+                ` : ''}
+                <label class="cursor-pointer font-bold text-slate-500 hover:text-slate-800 hover:underline">
+                  Load Local MP3
+                  <input type="file" accept="audio/*" onchange="handleLocalAudioUpload(event)" class="hidden" />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- CHUNKING (/) HINTS PANEL -->
+          ${showChunking ? `
+            <div class="bg-white rounded-[26px] p-6 border-2 border-[#D7FFB8] shadow-card animate-view space-y-3">
+              <div class="flex items-center justify-between">
+                <h3 class="font-display font-extrabold text-[#46A302] text-base">✂️ Chunking Guide (/) — Segment ${currentIndex + 1}</h3>
+                <button onclick="toggleChunkingHint()" class="text-xs font-bold text-slate-400 hover:text-slate-700">Close</button>
+              </div>
+              <div class="space-y-2.5 text-sm text-slate-800 leading-relaxed bg-[#F6FDF2] p-4 rounded-2xl border border-[#D7FFB8]">
+                ${currentSeg.sentences.map(s => `<p>${escapeHtml(s).replace(/\s\/\s/g, ' <span class="text-[#58CC02] font-black px-1">/</span> ')}</p>`).join('')}
+              </div>
+            </div>
+          ` : ''}
+
+          <!-- GLOSSARY QUICK DRAWER (PRACTICE MODE ONLY) -->
+          ${(!isChallenge && showHelper) ? `
+            <div class="bg-white rounded-[26px] p-6 border-2 border-blue-200 shadow-card animate-view space-y-4">
+              <div class="flex items-center justify-between">
+                <h3 class="font-display font-extrabold text-slate-900 text-base">📖 Quick Glossary (${ex.glossary.length} words)</h3>
+                <button onclick="toggleInterpretHelper()" class="text-xs font-bold text-slate-400 hover:text-slate-700">Close</button>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-h-56 overflow-y-auto pr-1">
+                ${ex.glossary.map(g => `
+                  <div class="p-2.5 rounded-xl bg-slate-50 border border-slate-100 text-xs">
+                    <span class="font-extrabold text-slate-900">${escapeHtml(g.term)}</span>
+                    <span class="text-[#58CC02] mx-1">→</span>
+                    <span class="text-slate-600">${escapeHtml(g.meaning)}</span>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    function toggleInterpretHelper() { state.interpret.showHelper = !state.interpret.showHelper; render(); }
+    function toggleChunkingHint() { state.interpret.showChunking = !state.interpret.showChunking; render(); }
+    function toggleEmbedDrivePlayer() { state.interpret.showEmbedPlayer = !state.interpret.showEmbedPlayer; render(); }
+
+    function handleLocalAudioUpload(event) {
+      const file = event.target.files && event.target.files[0];
+      if (!file) return;
+      cleanupMedia();
+      state.interpret.localAudioUrl = URL.createObjectURL(file);
+      state.interpret.localAudioName = file.name;
+      state.interpret.audioError = false;
+      state.interpret.phase = 'IDLE';
+      showToast(`Loaded local audio: ${file.name}`, 'success');
+      render();
+    }
+
+    function confirmExitInterpret() {
+      openModal({
+        title: 'Exit Interpreting Session?',
+        body: 'Your progress for this session will not count toward your streak unless you complete all segments and reach the Review screen.',
+        actions: [
+          { label: 'Keep Practicing', className: 'btn-3d-white px-4 py-2 rounded-2xl text-sm font-bold' },
+          { label: 'Exit to Hub', className: 'btn-3d-red px-4 py-2 rounded-2xl text-sm font-extrabold', onClick: () => navigate('home') }
+        ]
+      });
+    }
+
+    function formatDuration(sec) {
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    // ---- [INTERPRET] STEP 1: ORIGINAL GOOGLE DRIVE MP3 + PROPORTIONAL SEGMENT PAUSING ----
+    function startSegmentPlayback() {
+      cleanupMedia();
+      const ex = getSelectedExercise();
+      if (!ex) return;
+
+      const seg = state.interpret.segments[state.interpret.currentIndex];
+      if (!seg) return;
+
+      const speed = state.mode === 'CHALLENGE' ? 1.0 : state.params.speed;
+
+      state.interpret.phase = 'PLAYING';
+      render();
+
+      // Priority 1: Local MP3 file loaded by user
+      if (state.interpret.localAudioUrl) {
+        playSegmentedAudioUrl(state.interpret.localAudioUrl, null, seg, speed);
+        return;
+      }
+
+      // Priority 2: Original Google Drive MP3
+      if (ex.driveFileId && ex.driveFileId.trim()) {
+        const primaryUrl = `https://docs.google.com/uc?export=open&id=${ex.driveFileId.trim()}`;
+        const fallbackUrl = `https://docs.google.com/uc?export=download&id=${ex.driveFileId.trim()}`;
+        playSegmentedAudioUrl(primaryUrl, fallbackUrl, seg, speed);
+        return;
+      }
+
+      // No audio linked
+      state.interpret.phase = 'IDLE';
+      state.interpret.audioError = true;
+      showToast('No audio file linked to this exercise — please load a local MP3 file.', 'warning');
+      render();
+    }
+
+    function playSegmentedAudioUrl(primaryUrl, fallbackUrl, seg, speed) {
+      let triedFallback = false;
+
+      function tryLoad(url) {
+        try {
+          const audio = new Audio(url);
+          audio.preload = 'metadata';
+          activeAudioEl = audio;
+
+          let segmentStarted = false;
+          let endTime = Infinity;
+
+          audio.onloadedmetadata = () => {
+            if (activeAudioEl !== audio) return;
+            const dur = audio.duration;
+            if (dur && isFinite(dur) && dur > 0) {
+              const startTime = Math.max(0, seg.startRatio * dur);
+              endTime = Math.min(dur, seg.endRatio * dur);
+              try { audio.currentTime = startTime; } catch (e) {}
+            }
+            audio.playbackRate = speed;
+            audio.play().then(() => {
+              segmentStarted = true;
+              state.interpret.audioError = false;
+            }).catch(() => handleFail());
+          };
+
+          audio.ontimeupdate = () => {
+            if (activeAudioEl !== audio || !segmentStarted) return;
+            if (audio.currentTime >= endTime - 0.08) {
+              audio.pause();
+              audio.ontimeupdate = null;
+              if (state.view === 'interpret' && state.interpret.phase === 'PLAYING') {
+                startCountdown();
+              }
+            }
+          };
+
+          audio.onended = () => {
+            if (activeAudioEl !== audio) return;
+            if (state.view === 'interpret' && state.interpret.phase === 'PLAYING') {
+              startCountdown();
+            }
+          };
+
+          audio.onerror = () => handleFail();
+
+          // Safety timeout if Drive hangs silently without firing onerror
+          setTimeout(() => {
+            if (activeAudioEl === audio && !segmentStarted && state.view === 'interpret' && state.interpret.phase === 'PLAYING') {
+              handleFail();
+            }
+          }, 5500);
+        } catch (e) {
+          handleFail();
+        }
+      }
+
+      function handleFail() {
+        if (!triedFallback && fallbackUrl) {
+          triedFallback = true;
+          tryLoad(fallbackUrl);
+          return;
+        }
+        cleanupMedia();
+        state.interpret.audioError = true;
+        state.interpret.showEmbedPlayer = true;
+        state.interpret.phase = 'IDLE';
+        showToast('Direct Drive MP3 blocked by browser — use the Embedded Drive Player below or load a local MP3 file.', 'warning');
+        render();
+      }
+
+      tryLoad(primaryUrl);
+    }
+
+    function skipToCountdown() { cleanupMedia(); startCountdown(); }
+
+    // ---- [INTERPRET] STEP 2: 2-SECOND COUNTDOWN ----
+    function startCountdown() {
+      cleanupMedia();
+      state.interpret.phase = 'COUNTDOWN';
+      state.interpret.countdownVal = 2;
+      render();
+
+      activeCountdownTimer = setInterval(() => {
+        state.interpret.countdownVal -= 1;
+        if (state.interpret.countdownVal <= 0) {
+          clearInterval(activeCountdownTimer);
+          activeCountdownTimer = null;
+          startRecording();
+        } else {
+          const el = document.getElementById('countdown-number');
+          if (el) el.textContent = state.interpret.countdownVal;
+        }
+      }, 1000);
+    }
+
+    // ---- [INTERPRET] STEP 3: MICROPHONE RECORDING ----
+    async function startRecording() {
+      cleanupMedia();
+      state.interpret.phase = 'RECORDING';
+      state.interpret.recSeconds = 0;
+      state.interpret.micSimulated = false;
+      activeRecordedChunks = [];
+
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia && typeof MediaRecorder !== 'undefined') {
+        try {
+          activeMediaStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          activeMediaRecorder = new MediaRecorder(activeMediaStream);
+          activeMediaRecorder.ondataavailable = (e) => {
+            if (e.data && e.data.size > 0) activeRecordedChunks.push(e.data);
+          };
+          activeMediaRecorder.onstop = () => {
+            const blob = new Blob(activeRecordedChunks, { type: 'audio/webm' });
+            const url = URL.createObjectURL(blob);
+            state.interpret.recordings[state.interpret.currentIndex] = {
+              url, duration: state.interpret.recSeconds, simulated: false
+            };
+            if (activeMediaStream) {
+              activeMediaStream.getTracks().forEach(t => t.stop());
+              activeMediaStream = null;
+            }
+            if (state.view === 'interpret') startAutoPlayback(url, false);
+          };
+          activeMediaRecorder.start();
+        } catch (err) {
+          state.interpret.micSimulated = true;
+        }
+      } else {
+        state.interpret.micSimulated = true;
+      }
+
+      render();
+
+      const limit = (state.mode === 'PRACTICE' && state.params.timerLimit > 0) ? state.params.timerLimit : 0;
+      activeRecInterval = setInterval(() => {
+        state.interpret.recSeconds += 1;
+        const timerEl = document.getElementById('rec-timer-text');
+        if (timerEl) {
+          timerEl.textContent = limit > 0
+            ? `Time left: ${Math.max(0, limit - state.interpret.recSeconds)}s`
+            : `Recording: ${formatDuration(state.interpret.recSeconds)}`;
+        }
+        if (limit > 0 && state.interpret.recSeconds >= limit) stopRecording();
+      }, 1000);
+    }
+
+    function stopRecording() {
+      if (activeRecInterval) { clearInterval(activeRecInterval); activeRecInterval = null; }
+      if (activeMediaRecorder && activeMediaRecorder.state !== 'inactive') {
+        try { activeMediaRecorder.stop(); return; } catch (e) {}
+      }
+      state.interpret.recordings[state.interpret.currentIndex] = {
+        url: null, duration: Math.max(2, state.interpret.recSeconds), simulated: true
+      };
+      startAutoPlayback(null, true);
+    }
+
+    // ---- [INTERPRET] STEP 4: AUTO-PLAYBACK ----
+    function startAutoPlayback(audioUrl, simulated) {
+      state.interpret.phase = 'PLAYBACK';
+      state.interpret.playbackProgress = 0;
+      render();
+
+      if (!simulated && audioUrl) {
+        try {
+          activeAudioEl = new Audio(audioUrl);
+          activeAudioEl.ontimeupdate = () => {
+            if (!activeAudioEl || !activeAudioEl.duration || !isFinite(activeAudioEl.duration)) return;
+            updatePlaybackUI(Math.min(100, (activeAudioEl.currentTime / activeAudioEl.duration) * 100));
+          };
+          activeAudioEl.onended = () => {
+            updatePlaybackUI(100);
+            setTimeout(() => {
+              if (state.view === 'interpret' && state.interpret.phase === 'PLAYBACK') proceedNextSegment();
+            }, 450);
+          };
+          activeAudioEl.onerror = () => runSimulatedPlayback();
+          activeAudioEl.play().catch(() => runSimulatedPlayback());
+          return;
+        } catch (e) {}
+      }
+      runSimulatedPlayback();
+    }
+
+    function runSimulatedPlayback() {
+      let pct = 0;
+      activeSimPlaybackInterval = setInterval(() => {
+        pct += 5;
+        updatePlaybackUI(pct);
+        if (pct >= 100) {
+          clearInterval(activeSimPlaybackInterval);
+          activeSimPlaybackInterval = null;
+          setTimeout(() => {
+            if (state.view === 'interpret' && state.interpret.phase === 'PLAYBACK') proceedNextSegment();
+          }, 350);
+        }
+      }, 110);
+    }
+
+    function updatePlaybackUI(pct) {
+      state.interpret.playbackProgress = pct;
+      const bar = document.getElementById('playback-bar-fill');
+      const lbl = document.getElementById('playback-pct-label');
+      if (bar) bar.style.width = `${pct}%`;
+      if (lbl) lbl.textContent = `${Math.round(pct)}%`;
+    }
+
+    function proceedNextSegment() {
+      cleanupMedia();
+      if (state.interpret.currentIndex < state.interpret.segments.length - 1) {
+        state.interpret.currentIndex += 1;
+        state.interpret.phase = 'IDLE';
+        render();
+      } else {
+        completeExerciseAndReview();
+      }
+    }
+
+    function completeExerciseAndReview() {
+      const ex = getSelectedExercise();
+      state.streak.streakCount += 1;
+      state.streak.totalSessions += 1;
+      if (ex && !state.streak.completedIds.includes(ex.id)) {
+        state.streak.completedIds.push(ex.id);
+      }
+      saveStreak(state.streak);
+      state.streakJustLit = true;
+      state.reviewShowChunks = false;
+      navigate('review');
+    }
+
+    /*************************************************************************
+     * 10. VIEW 5: REVIEW SCREEN ([REVIEW] + STREAK CELEBRATION)
+     *************************************************************************/
+    function renderReviewView() {
+      const ex = getSelectedExercise();
+      if (!ex) return renderHomeView();
+
+      const isChallenge = state.mode === 'CHALLENGE';
+      const nextRec = state.exercises.find(e => e.id !== ex.id && !state.streak.completedIds.includes(e.id))
+        || state.exercises.find(e => e.id !== ex.id)
+        || ex;
+
+      const recordedSegments = state.interpret.recordings
+        .map((rec, idx) => ({ rec, idx }))
+        .filter(item => item.rec && item.rec.url);
+
+      const transcriptHtml = ex.sentences.map((s, idx) => {
+        const display = state.reviewShowChunks
+          ? escapeHtml(s).replace(/\s\/\s/g, ' <span class="text-[#58CC02] font-black px-0.5">/</span> ')
+          : escapeHtml(stripChunks(s));
+        return `<p class="mb-2.5 last:mb-0"><span class="text-xs font-extrabold text-slate-400 mr-1.5">${idx + 1}.</span>${display}</p>`;
+      }).join('');
+
+      return `
+        <div class="animate-view max-w-5xl mx-auto space-y-7">
+          <!-- STREAK CELEBRATION BANNER -->
+          <section class="relative overflow-hidden rounded-[30px] bg-gradient-to-r from-[#58CC02] via-[#61E002] to-[#FF9600] p-6 sm:p-8 text-white shadow-xl border-b-4 border-[#46A302]">
+            <div id="confetti-layer" class="absolute inset-0 pointer-events-none overflow-hidden"></div>
+            <div class="relative flex flex-col sm:flex-row items-center justify-between gap-5">
+              <div class="flex items-center gap-4 text-center sm:text-left flex-col sm:flex-row">
+                <div class="bg-white/20 backdrop-blur-md p-2 rounded-3xl">
+                  ${getMascotSVG(68)}
+                </div>
+                <div>
+                  <div class="inline-block px-3 py-0.5 rounded-full bg-white/20 text-xs font-extrabold uppercase tracking-wider mb-1">
+                    Exercise Completed!
+                  </div>
+                  <h1 class="font-display text-2xl sm:text-3xl font-black tracking-tight">
+                    Streak Lit! 🔥
+                  </h1>
+                  <p class="text-white/95 text-sm mt-1">
+                    Awesome work! Your interpreting streak is now <strong>${state.streak.streakCount}</strong>. Keep the momentum going!
+                  </p>
+                </div>
+              </div>
+              <div class="px-5 py-3 rounded-2xl bg-white text-[#FF9600] border-b-4 border-[#D97706] font-display font-black text-2xl shadow-md shrink-0">
+                +1 🔥 <span class="text-sm font-bold text-slate-500 ml-1">(${state.streak.streakCount})</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- Review Header + Chunking Toggle -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 class="font-display text-xl sm:text-2xl font-black text-slate-900">Performance Review ([REVIEW])</h2>
+              <p class="text-sm text-slate-500">${escapeHtml(ex.title)} • ${state.mode} Mode</p>
+            </div>
+            <button onclick="toggleReviewChunks()" class="self-start sm:self-auto px-4 py-2 rounded-2xl text-xs font-extrabold border-2 transition-colors ${state.reviewShowChunks ? 'bg-[#58CC02] text-white border-[#46A302]' : 'bg-white text-[#46A302] border-[#D7FFB8] hover:bg-[#EEFFDB]'}">
+              ${state.reviewShowChunks ? 'Hide Chunk Separators (/)' : '✂️ Highlight Chunks (/)'}
+            </button>
+          </div>
+
+          <!-- User Recordings Playback Strip (if recorded) -->
+          ${recordedSegments.length > 0 ? `
+            <section class="bg-white rounded-[26px] p-5 border-2 border-[#D7FFB8] shadow-card">
+              <h3 class="font-display font-extrabold text-sm text-[#46A302] uppercase tracking-wider mb-3">🎙 Your Recorded Segments</h3>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                ${recordedSegments.map(({ rec, idx }) => `
+                  <div class="p-3 rounded-2xl bg-[#F6FDF2] border border-[#D7FFB8] flex flex-col gap-1.5">
+                    <span class="text-xs font-extrabold text-slate-700">Segment ${idx + 1}</span>
+                    <audio controls src="${rec.url}" class="w-full h-8"></audio>
+                  </div>
+                `).join('')}
+              </div>
+            </section>
+          ` : ''}
+
+          <!-- SIDE-BY-SIDE COMPARISON -->
+          <section class="bg-white rounded-[28px] border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card overflow-hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 divide-y md:divide-y-0 md:divide-x divide-slate-200">
+              <!-- Original Transcript (English) -->
+              <div class="p-6 sm:p-7">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-[11px] font-extrabold uppercase tracking-wider mb-4">
+                  Original Transcript (English)
+                </div>
+                <div class="text-sm sm:text-[15px] text-slate-800 leading-relaxed">
+                  ${transcriptHtml}
+                </div>
+              </div>
+
+              <!-- Reference Translation (Vietnamese) -->
+              <div class="p-6 sm:p-7 bg-[#F6FDF2]/80">
+                <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EEFFDB] text-[#46A302] border border-[#D7FFB8] text-[11px] font-extrabold uppercase tracking-wider mb-4">
+                  Reference Translation (Vietnamese)
+                </div>
+                <div class="text-sm sm:text-[15px] text-slate-800 leading-relaxed font-medium">
+                  ${escapeHtml(ex.translationVi)}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ACTION BUTTONS: FINISH & PRACTICE MORE -->
+          <div class="bg-white rounded-[26px] p-6 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-center sm:text-left">
+              <div class="font-display font-extrabold text-slate-900 text-base">Ready for your next session?</div>
+              <div class="text-xs text-slate-500 mt-0.5">Recommended next: <strong>${escapeHtml(nextRec.title)}</strong></div>
+            </div>
+            <div class="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+              <button onclick="navigate('home')" class="w-full sm:w-auto btn-3d-white px-7 py-3.5 rounded-2xl text-sm font-extrabold">
+                FINISH
+              </button>
+              <button onclick="openExercise('${escapeHtml(nextRec.id)}')" class="w-full sm:w-auto ${isChallenge ? 'btn-3d-red' : 'btn-3d-green'} px-7 py-3.5 rounded-2xl text-sm font-extrabold">
+                PRACTICE MORE →
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function toggleReviewChunks() { state.reviewShowChunks = !state.reviewShowChunks; render(); }
+
+    function triggerReviewConfetti() {
+      if (!state.streakJustLit) return;
+      state.streakJustLit = false;
+      const layer = document.getElementById('confetti-layer');
+      if (!layer) return;
+      const colors = ['#FFFFFF', '#FEF08A', '#89E219', '#BAE6FD', '#FDE047', '#FECDD3'];
+      for (let i = 0; i < 36; i++) {
+        const piece = document.createElement('div');
+        piece.className = 'confetti-piece';
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.top = `${Math.random() * 20}%`;
+        piece.style.backgroundColor = colors[i % colors.length];
+        piece.style.animationDelay = `${Math.random() * 0.6}s`;
+        layer.appendChild(piece);
+      }
+    }
+
+    /*************************************************************************
+     * 11. VIEW 6: ADMIN MODE (100% ENGLISH CRUD + DRIVE ID AUTO-EXTRACTION)
+     *************************************************************************/
+    let adminDraft = null;
+
+    function renderAdminView() {
+      if (state.adminEditingId !== null) return renderAdminForm();
+
+      const rows = state.exercises.map(ex => {
+        const tg = getTagStyle(ex.tag);
+        const lv = getLevelStyle(ex.level, 'PRACTICE');
+        return `
+          <tr class="border-b border-slate-100 last:border-0 hover:bg-[#F6FDF2] transition-colors">
+            <td class="py-4 px-4 font-extrabold text-xs text-[#46A302]">${escapeHtml(ex.id)}</td>
+            <td class="py-4 px-4">
+              <div class="font-extrabold text-sm text-slate-900">${escapeHtml(ex.title)}</div>
+              <div class="text-xs text-slate-500 line-clamp-1 mt-0.5">${escapeHtml(ex.summary)}</div>
+            </td>
+            <td class="py-4 px-4">
+              <span class="px-2.5 py-1 rounded-full text-xs font-extrabold" style="background:${lv.bg}; color:${lv.text};">Level ${ex.level}</span>
+            </td>
+            <td class="py-4 px-4">
+              <span class="px-2.5 py-1 rounded-full text-xs font-bold border" style="background:${tg.bg}; color:${tg.text}; border-color:${tg.border};">${escapeHtml(ex.tag)}</span>
+            </td>
+            <td class="py-4 px-4 text-xs font-semibold text-slate-500">
+              ${ex.driveFileId ? '<span class="text-[#46A302] font-extrabold">🎧 Drive MP3</span>' : '<span class="text-slate-400">No Audio</span>'}
+            </td>
+            <td class="py-4 px-4 text-xs font-semibold text-slate-500">${ex.sentences.length} sentences • ${ex.glossary.length} words</td>
+            <td class="py-4 px-4 text-right whitespace-nowrap">
+              <button onclick="adminStartEdit('${escapeHtml(ex.id)}')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold text-[#46A302] bg-[#EEFFDB] hover:bg-[#D7FFB8] mr-1.5 transition-colors">Edit</button>
+              <button onclick="adminConfirmDelete('${escapeHtml(ex.id)}')" class="px-3 py-1.5 rounded-xl text-xs font-extrabold text-rose-600 bg-rose-50 hover:bg-rose-100 transition-colors">Delete</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      return `
+        <div class="animate-view space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white rounded-[28px] p-6 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card">
+            <div>
+              <span class="inline-block px-2.5 py-0.5 rounded-full bg-[#EEFFDB] text-[#46A302] text-[10px] font-extrabold uppercase tracking-wider mb-1.5">Admin Mode</span>
+              <h1 class="font-display text-2xl font-black text-slate-900">Exercise Content Manager</h1>
+              <p class="text-sm text-slate-500 mt-0.5">Add, edit, or delete exercises, link Google Drive MP3 audio, and manage chunking & glossaries.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2.5">
+              <button onclick="adminConfirmReset()" class="btn-3d-white px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-bold">
+                Reset Default Data
+              </button>
+              <button onclick="adminStartEdit('NEW')" class="btn-3d-green px-5 py-2.5 rounded-2xl text-xs sm:text-sm font-extrabold">
+                + Add New Exercise
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-white rounded-[28px] border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card overflow-hidden">
+            <div class="overflow-x-auto">
+              <table class="w-full text-left border-collapse">
+                <thead>
+                  <tr class="bg-[#F6FDF2] border-b border-[#D7FFB8] text-[11px] font-extrabold uppercase tracking-wider text-[#46A302]">
+                    <th class="py-3.5 px-4">ID</th>
+                    <th class="py-3.5 px-4">Exercise</th>
+                    <th class="py-3.5 px-4">Level</th>
+                    <th class="py-3.5 px-4">Topic</th>
+                    <th class="py-3.5 px-4">Audio</th>
+                    <th class="py-3.5 px-4">Stats</th>
+                    <th class="py-3.5 px-4 text-right">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>${rows}</tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function adminStartEdit(id) {
+      if (id === 'NEW') {
+        adminDraft = {
+          id: 'E' + (state.exercises.length + 1),
+          title: '',
+          driveFileId: '',
+          level: 1,
+          tag: 'Environment',
+          mode: 'BOTH',
+          summary: '',
+          brief: '',
+          sentences: [''],
+          translationVi: '',
+          glossary: [{ term: '', meaning: '', note: '' }]
+        };
+      } else {
+        const found = state.exercises.find(e => e.id === id);
+        adminDraft = found ? JSON.parse(JSON.stringify(found)) : null;
+      }
+      state.adminEditingId = id;
+      render();
+    }
+
+    function renderAdminForm() {
+      if (!adminDraft) { state.adminEditingId = null; return renderAdminView(); }
+      const isNew = state.adminEditingId === 'NEW';
+
+      return `
+        <div class="animate-view max-w-4xl mx-auto space-y-6">
+          <div class="flex items-center justify-between">
+            <button onclick="adminCancelEdit()" class="inline-flex items-center gap-1.5 text-sm font-bold text-[#46A302] hover:text-[#58CC02]">
+              ← Back to Exercise List
+            </button>
+            <h1 class="font-display text-xl font-black text-slate-900">${isNew ? 'Create New Exercise' : 'Edit Exercise ' + escapeHtml(adminDraft.id)}</h1>
+          </div>
+
+          <form onsubmit="adminSaveForm(event)" class="space-y-6">
+            <!-- Section 1: Metadata & Drive Audio -->
+            <div class="bg-white rounded-[28px] p-6 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card space-y-4">
+              <h2 class="font-display font-extrabold text-base text-slate-900 border-b border-slate-100 pb-3">1. Exercise Details & Google Drive Audio</h2>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-bold text-slate-600 mb-1.5">Exercise Title *</label>
+                  <input required type="text" value="${escapeHtml(adminDraft.title)}" oninput="adminDraft.title=this.value" placeholder="e.g., Global Renewable Energy Summit" class="w-full px-4 py-2.5 rounded-xl bg-[#F6FDF2] border-2 border-[#E5E7EB] text-sm focus:bg-white focus:outline-none focus:border-[#58CC02]" />
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-bold text-slate-600 mb-1.5">Google Drive MP3 Link or File ID (auto-extracts ID)</label>
+                  <input type="text" value="${escapeHtml(adminDraft.driveFileId || '')}" oninput="adminUpdateDriveId(this.value)" placeholder="Paste https://drive.google.com/file/d/FILE_ID/view or raw FILE_ID" class="w-full px-4 py-2.5 rounded-xl bg-[#F6FDF2] border-2 border-[#E5E7EB] text-sm focus:bg-white focus:outline-none focus:border-[#58CC02]" />
+                  <p id="drive-id-preview" class="text-[11px] font-bold text-[#46A302] mt-1">
+                    ${adminDraft.driveFileId ? 'Extracted Drive File ID: ' + escapeHtml(adminDraft.driveFileId) : 'Paste a Google Drive share link or raw file ID for MP3 audio.'}
+                  </p>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1.5">Difficulty Level</label>
+                  <select onchange="adminDraft.level=Number(this.value)" class="w-full px-4 py-2.5 rounded-xl bg-[#F6FDF2] border-2 border-[#E5E7EB] text-sm focus:bg-white focus:outline-none focus:border-[#58CC02]">
+                    <option value="1" ${adminDraft.level == 1 ? 'selected' : ''}>Level 1 (Beginner)</option>
+                    <option value="2" ${adminDraft.level == 2 ? 'selected' : ''}>Level 2 (Intermediate)</option>
+                    <option value="3" ${adminDraft.level == 3 ? 'selected' : ''}>Level 3 (Advanced)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label class="block text-xs font-bold text-slate-600 mb-1.5">Topic Tag</label>
+                  <select onchange="adminDraft.tag=this.value" class="w-full px-4 py-2.5 rounded-xl bg-[#F6FDF2] border-2 border-[#E5E7EB] text-sm focus:bg-white focus:outline-none focus:border-[#58CC02]">
+                    ${AVAILABLE_TAGS.map(t => `<option value="${escapeHtml(t)}" ${adminDraft.tag === t ? 'selected' : ''}>${escapeHtml(t)}</option>`).join('')}
+                  </select>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-bold text-slate-600 mb-1.5">Available Mode</label>
+                  <select onchange="adminDraft.mode=this.value" class="w-full px-4 py-2.5 rounded-xl bg-[#F6FDF2] border-2 border-[#E5E7EB] text-sm focus:bg-white focus:outline-none focus:border-[#58CC02]">
+                    <option value="BOTH" ${adminDraft.mode === 'BOTH' ? 'selected' : ''}>Both (PRACTICE & CHALLENGE)</option>
+                    <option value="PRACTICE" ${adminDraft.mode === 'PRACTICE' ? 'selected' : ''}>PRACTICE Only</option>
+                    <option value="CHALLENGE" ${adminDraft.mode === 'CHALLENGE' ? 'selected' : ''}>CHALLENGE Only</option>
+                  </select>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-bold text-slate-600 mb-1.5">Short Summary (English) *</label>
+                  <textarea required rows="2" oninput="adminDraft.summary=this.value" class="w-full px-4 py-2.5 rounded-xl bg-[#F6FDF2] border-2 border-[#E5E7EB] text-sm focus:bg-white focus:outline-none focus:border-[#58CC02]">${escapeHtml(adminDraft.summary)}</textarea>
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label class="block text-xs font-bold text-slate-600 mb-1.5">Background Knowledge Brief (English) *</label>
+                  <textarea required rows="3" oninput="adminDraft.brief=this.value" class="w-full px-4 py-2.5 rounded-xl bg-[#F6FDF2] border-2 border-[#E5E7EB] text-sm focus:bg-white focus:outline-none focus:border-[#58CC02]">${escapeHtml(adminDraft.brief)}</textarea>
+                </div>
+              </div>
+            </div>
+
+            <!-- Section 2: Sentences with Chunking (/) & Vietnamese Reference Translation -->
+            <div class="bg-white rounded-[28px] p-6 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div>
+                  <h2 class="font-display font-extrabold text-base text-slate-900">2. Sentences & Chunking (${adminDraft.sentences.length} sentences)</h2>
+                  <p class="text-xs text-slate-500">Use <code>/</code> between phrases to mark interpreting chunks.</p>
+                </div>
+                <button type="button" onclick="adminAddSentence()" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-[#EEFFDB] text-[#46A302] hover:bg-[#D7FFB8]">+ Add Sentence</button>
+              </div>
+              <div class="space-y-3">
+                ${adminDraft.sentences.map((s, idx) => `
+                  <div class="p-3.5 rounded-2xl bg-[#F6FDF2] border border-[#D7FFB8] space-y-2">
+                    <div class="flex items-center justify-between">
+                      <span class="text-xs font-extrabold text-[#46A302]">Sentence ${idx + 1}</span>
+                      ${adminDraft.sentences.length > 1 ? `<button type="button" onclick="adminRemoveSentence(${idx})" class="text-xs font-bold text-rose-500 hover:underline">Remove</button>` : ''}
+                    </div>
+                    <textarea required rows="2" placeholder="English sentence with / chunk markers..." oninput="adminDraft.sentences[${idx}]=this.value" class="w-full px-3.5 py-2 rounded-xl bg-white border border-[#E5E7EB] text-sm focus:outline-none focus:border-[#58CC02]">${escapeHtml(s)}</textarea>
+                  </div>
+                `).join('')}
+              </div>
+
+              <div class="pt-3 border-t border-slate-100">
+                <label class="block text-xs font-bold text-slate-600 mb-1.5">Reference Translation (Vietnamese) *</label>
+                <textarea required rows="4" oninput="adminDraft.translationVi=this.value" placeholder="Enter the complete polished Vietnamese reference translation..." class="w-full px-4 py-2.5 rounded-xl bg-[#F6FDF2] border-2 border-[#E5E7EB] text-sm focus:bg-white focus:outline-none focus:border-[#58CC02]">${escapeHtml(adminDraft.translationVi)}</textarea>
+              </div>
+            </div>
+
+            <!-- Section 3: Glossary -->
+            <div class="bg-white rounded-[28px] p-6 border-2 border-[#E5E7EB] border-b-4 border-b-[#D1D5DB] shadow-card space-y-4">
+              <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                <h2 class="font-display font-extrabold text-base text-slate-900">3. Glossary Vocabulary (${adminDraft.glossary.length} words)</h2>
+                <button type="button" onclick="adminAddGlossary()" class="px-3.5 py-1.5 rounded-xl text-xs font-extrabold bg-[#EEFFDB] text-[#46A302] hover:bg-[#D7FFB8]">+ Add Word</button>
+              </div>
+              <div class="space-y-2.5">
+                ${adminDraft.glossary.map((g, idx) => `
+                  <div class="grid grid-cols-1 sm:grid-cols-12 gap-2 items-center p-3 rounded-2xl bg-[#F6FDF2] border border-[#D7FFB8]">
+                    <input required type="text" placeholder="Term / Phrase (EN)" value="${escapeHtml(g.term)}" oninput="adminDraft.glossary[${idx}].term=this.value" class="sm:col-span-4 px-3 py-2 rounded-xl bg-white border border-[#E5E7EB] text-xs font-bold" />
+                    <input required type="text" placeholder="Vietnamese Equivalent" value="${escapeHtml(g.meaning)}" oninput="adminDraft.glossary[${idx}].meaning=this.value" class="sm:col-span-4 px-3 py-2 rounded-xl bg-white border border-[#E5E7EB] text-xs" />
+                    <input type="text" placeholder="Notes (EN)" value="${escapeHtml(g.note || '')}" oninput="adminDraft.glossary[${idx}].note=this.value" class="sm:col-span-3 px-3 py-2 rounded-xl bg-white border border-[#E5E7EB] text-xs" />
+                    <div class="sm:col-span-1 text-right">
+                      ${adminDraft.glossary.length > 1 ? `<button type="button" onclick="adminRemoveGlossary(${idx})" class="text-xs font-bold text-rose-500 hover:underline">Del</button>` : ''}
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+              <button type="button" onclick="adminCancelEdit()" class="btn-3d-white px-6 py-3 rounded-2xl text-sm font-bold">Cancel</button>
+              <button type="submit" class="btn-3d-green px-8 py-3 rounded-2xl text-sm font-extrabold">Save Exercise</button>
+            </div>
+          </form>
+        </div>
+      `;
+    }
+
+    function adminUpdateDriveId(rawVal) {
+      const id = extractDriveId(rawVal);
+      adminDraft.driveFileId = id;
+      const preview = document.getElementById('drive-id-preview');
+      if (preview) {
+        preview.textContent = id
+          ? `Extracted Drive File ID: ${id}`
+          : 'Paste a Google Drive share link or raw file ID for MP3 audio.';
+      }
+    }
+
+    function adminCancelEdit() { state.adminEditingId = null; adminDraft = null; render(); }
+    function adminAddSentence() { adminDraft.sentences.push(''); render(); }
+    function adminRemoveSentence(idx) { adminDraft.sentences.splice(idx, 1); render(); }
+    function adminAddGlossary() { adminDraft.glossary.push({ term: '', meaning: '', note: '' }); render(); }
+    function adminRemoveGlossary(idx) { adminDraft.glossary.splice(idx, 1); render(); }
+
+    function adminSaveForm(e) {
+      e.preventDefault();
+      if (!adminDraft) return;
+      if (state.adminEditingId === 'NEW') {
+        state.exercises.unshift(adminDraft);
+        showToast('New exercise created successfully!', 'success');
+      } else {
+        const idx = state.exercises.findIndex(x => x.id === state.adminEditingId);
+        if (idx !== -1) state.exercises[idx] = adminDraft;
+        showToast('Exercise updated successfully!', 'success');
+      }
+      saveExercises(state.exercises);
+      state.adminEditingId = null;
+      adminDraft = null;
+      render();
+    }
+
+    function adminConfirmDelete(id) {
+      const ex = state.exercises.find(x => x.id === id);
+      if (!ex) return;
+      openModal({
+        title: 'Delete Exercise?',
+        body: `Are you sure you want to permanently delete <strong>${escapeHtml(ex.title)}</strong>?`,
+        actions: [
+          { label: 'Cancel', className: 'btn-3d-white px-4 py-2 rounded-2xl text-sm font-bold' },
+          {
+            label: 'Delete',
+            className: 'btn-3d-red px-4 py-2 rounded-2xl text-sm font-extrabold',
+            onClick: () => {
+              state.exercises = state.exercises.filter(x => x.id !== id);
+              saveExercises(state.exercises);
+              showToast('Exercise deleted.', 'info');
+              render();
+            }
+          }
+        ]
+      });
+    }
+
+    function adminConfirmReset() {
+      openModal({
+        title: 'Reset Default 13 Exercises?',
+        body: 'This will restore all 13 default exercises linked to their Google Drive MP3 audio files. Your Streak progress will be preserved.',
+        actions: [
+          { label: 'Cancel', className: 'btn-3d-white px-4 py-2 rounded-2xl text-sm font-bold' },
+          {
+            label: 'Reset Data',
+            className: 'btn-3d-green px-4 py-2 rounded-2xl text-sm font-extrabold',
+            onClick: () => {
+              state.exercises = JSON.parse(JSON.stringify(DEFAULT_EXERCISES));
+              saveExercises(state.exercises);
+              showToast('Restored all 13 default exercises!', 'success');
+              render();
+            }
+          }
+        ]
+      });
+    }
+
+    /*************************************************************************
+     * 12. BOOTSTRAP APPLICATION
+     *************************************************************************/
+    window.addEventListener('beforeunload', cleanupMedia);
+    window.addEventListener('DOMContentLoaded', () => {
+      render();
+      initSplash();
+    });
+  </script>
+</body>
+</html>
